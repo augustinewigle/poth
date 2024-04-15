@@ -4,14 +4,14 @@
 \alias{calc_sir}
 \title{Calculate the measure for uncertainty for ranks}
 \usage{
-calc_sir(ranking_prob_mat = NA, sucras = NA, treatment_names)
+calc_sir(ranking_prob_mat = NA, sucras = NA, trt_names = NA)
 }
 \arguments{
 \item{ranking_prob_mat}{square matrix where the rows represent ranks and the columns treatments.}
 
 \item{sucras}{a vector of sucra values}
 
-\item{treatment_names}{a vector of treatment names. Should match the order of treatments in ranking_prob_mat or sucras}
+\item{trt_names}{a vector of treatment names. Should match the order of treatments in ranking_prob_mat or sucras}
 }
 \value{
 The separation in ranking metric.

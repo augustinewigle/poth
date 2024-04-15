@@ -4,12 +4,15 @@
 \alias{loo_sir}
 \title{Given a matrix of relative effects and standard errors, calculate the LOO SIR contribution}
 \usage{
-loo_sir(diffs = NA, ses = NA, rank_mat = NA, trt_names = NA, largerbetter)
+loo_sir(diffs = NA, ses = NA, samples = NA, trt_names = NA, largerbetter)
 }
 \arguments{
-\item{diffs}{Matrix of relative effects}
+\item{diffs}{Matrix of relative effects, must have column names that are the name of each treatment or trt_names must be specified}
 
-\item{ses}{Matrix of estimated standard errors for relative effects}
+\item{ses}{Matrix of estimated standard errors for relative effects, must have column names that are the name of each treatment or trt_names must be specified}
+
+\item{samples}{a matrix or data.frame of MCMC samples, where rows are MCMC samples and columns are relative effects (relative to anchor) for treatments.
+must have column names that are the name of each treatment or trt_names must be specified}
 
 \item{trt_names}{optional; vector of treatment names matching order in diffs and sds}
 

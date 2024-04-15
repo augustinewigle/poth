@@ -1,11 +1,11 @@
 #' Calculate the measure for uncertainty for ranks
 #' @param ranking_prob_mat square matrix where the rows represent ranks and the columns treatments.
 #' @param sucras a vector of sucra values
-#' @param treatment_names a vector of treatment names. Should match the order of treatments in ranking_prob_mat or sucras
+#' @param trt_names a vector of treatment names. Should match the order of treatments in ranking_prob_mat or sucras
 #'
 #' @returns The separation in ranking metric.
 #' @export
-calc_sir <- function(ranking_prob_mat = NA, sucras = NA, treatment_names) {
+calc_sir <- function(ranking_prob_mat = NA, sucras = NA, trt_names = NA) {
 
   if(length(ranking_prob_mat) > 1) {
 
@@ -20,11 +20,11 @@ calc_sir <- function(ranking_prob_mat = NA, sucras = NA, treatment_names) {
 
       stop("ranking_prob_mat must be a square matrix")
 
-    } else if(any(apply(ranking_prob_mat, 1, sum) != 1)) {
+    } else if(any(abs(apply(ranking_prob_mat, 1, sum)-1) > 1e-7)) {
 
       warning("The rows of ranking_prob_mat should sum to 1, check that it is a ranking matrix")
 
-    } else if(any(apply(ranking_prob_mat, 2, sum) != 1)) {
+    } else if(any(abs(apply(ranking_prob_mat, 2, sum)-1) > 1e-7)) {
 
       warning("The columns of ranking_prob_mat should sum to 1, check that it is a ranking matrix")
 
@@ -45,8 +45,12 @@ calc_sir <- function(ranking_prob_mat = NA, sucras = NA, treatment_names) {
 
     }
 
-    names(sucras) <- treatment_names
 
+    if(length(trt_names) > 1) {
+
+      names(sucras) <- trt_names
+
+    }
 
     return(list(sucras = sort(sucras, decreasing = T),
                 sir = 1-sum(rank_vars)*12/n/(n+1)/(n-1)))
@@ -64,7 +68,12 @@ calc_sir <- function(ranking_prob_mat = NA, sucras = NA, treatment_names) {
 
     sir <- 3*((1-n)/(n+1) + 4*(n-1)/(n*(n+1))*sum(sucras^2))
 
-    names(sucras) <- treatment_names
+    if(length(trt_names) > 1) {
+
+      names(sucras) <- trt_names
+
+    }
+
 
     return(list(sucras = sort(sucras, decreasing = T),
                 sir = sir))
