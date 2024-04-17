@@ -2,7 +2,9 @@
 
 export(calc_sir)
 export(get_rank_prob_mat)
+export(local_sir)
 export(loo_sir)
 export(p_scores)
 import(ggplot2)
+importFrom(stringr,str_trunc)
 importFrom(stringr,str_wrap)
