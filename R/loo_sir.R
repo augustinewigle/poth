@@ -140,10 +140,13 @@ loo_sir <- function(diffs = NA,
                    orig_score = scores[id_order],
                    score_type = score_type,
                    rank = rank(-scores[id_order]),
-                   sir_res_ratio = sir_res/sir,
+                   sir_res_ratio = sir_res/sum(abs(sir_res)),
                    SIR= sir)
 
   df$res_pos <- df$sir_res > 0
+
+  df <- df[order(df$rank),]
+
   # # df$mag_order <- order(abs(df$sir_res))
   #
   # df$xplot <- paste0(interaction(df$rank, df$trt_name, sep = "\n("), ")")
@@ -159,9 +162,7 @@ loo_sir <- function(diffs = NA,
     geom_hline(yintercept = 0) +
     scale_fill_manual(breaks = c(F, T), values = c("red4", "darkgreen"),
                       labels = c("Reduces certainty", "Increases certainty")) +
-    labs(y = ifelse(F, # can change if I want to go back to the ratio thing
-                    expression(frac(SIR-SIR^"-i",SIR)),
-                    expression(SIR-SIR^"-i")),
+    labs(y = expression(SIR-SIR^"-i"),
          x = paste0("Global Rank Using ", score_type, "s"),
          fill = str_wrap(paste0("Contribution to SIR\n(Global SIR ", ifelse(sir < 0.001, "< 0.001", paste0("= ", round(sir, digits = 3))), ")"), width = 20)) +
     guides(alpha = "none") +

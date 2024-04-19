@@ -104,7 +104,7 @@ local_sir <- function(diffs = NA,
         if(bayes) {
 
           rmat <- get_rank_prob_mat(samples = samples, largerbetter = largerbetter, trt_names = trt_names)
-          scores <- calc_sir(ranking_prob_mat = rmat, largerbetter, trt_names)$sucras
+          scores <- calc_sir(ranking_prob_mat = rmat, trt_names = trt_names)$sucras
 
         } else {
 
