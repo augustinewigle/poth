@@ -8,24 +8,24 @@ loo_sir(
   diffs = NA,
   ses = NA,
   samples = NA,
-  trt_names = NA,
+  trts = NULL,
   largerbetter,
-  plot_trt_names = T
+  plot_trts = TRUE
 )
 }
 \arguments{
-\item{diffs}{Matrix of relative effects, must have column names that are the name of each treatment or trt_names must be specified}
+\item{diffs}{Matrix of relative effects, must have column names that are the name of each treatment or trts must be specified}
 
-\item{ses}{Matrix of estimated standard errors for relative effects, must have column names that are the name of each treatment or trt_names must be specified}
+\item{ses}{Matrix of estimated standard errors for relative effects, must have column names that are the name of each treatment or trts must be specified}
 
 \item{samples}{a matrix or data.frame of MCMC samples, where rows are MCMC samples and columns are relative effects (relative to anchor) for treatments.
-must have column names that are the name of each treatment or trt_names must be specified}
+must have column names that are the name of each treatment or trts must be specified}
 
-\item{trt_names}{optional; vector of treatment names matching order in diffs and sds}
+\item{trts}{optional; vector of treatment names matching order in diffs and sds}
 
 \item{largerbetter}{Logical, T if larger outcomes are good. Defauls is T}
 
-\item{plot_trt_names}{Logical; should treatment names be included in the plot? Default it T}
+\item{plot_trts}{Logical; should treatment names be included in the plot? Default it TRUE}
 }
 \value{
 A named list with two elements:
