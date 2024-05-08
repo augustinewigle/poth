@@ -2,31 +2,70 @@
 % Please edit documentation in R/calc_sir.R
 \name{sir}
 \alias{sir}
+\alias{print.sir}
+\alias{summary.sir}
+\alias{print.summary.sir}
 \title{Calculate separation in ranking (SIR) metric}
 \usage{
-sir(x, trts = NULL)
+sir(x, pooled, trts = NULL)
+
+\method{print}{sir}(x, sort = TRUE, digits = 3, ...)
+
+\method{summary}{sir}(object, ...)
+
+\method{print}{summary.sir}(x, sort = TRUE, digits = 3, ...)
 }
 \arguments{
-\item{x}{A square matrix with rankings or a vector of SUCRA values
-or P-scores (see Details).}
+\item{x}{Mandatory argument with suitable information on the treatment
+hierarchy (see Details).}
+
+\item{pooled}{A character string indicating whether the treatment hierarchy
+is based on a common or random effects model. Either \code{"common"} or
+\code{"random"}, can be abbreviated.}
 
 \item{trts}{An optional vector with treatment names. Must match the
 order of treatments provided for argument \code{x}.}
+
+\item{sort}{A logical indicating whether printout should be sorted
+by decreasing ranking metric.}
+
+\item{digits}{Minimal number of significant digits, see
+\code{\link{print.default}}.}
+
+\item{\dots}{Additional arguments (ignored).}
+
+\item{object}{An object of class \code{summary.sir}.}
 }
 \value{
-A list with elements 'sucras' and 'sir'.
+An object of class \code{sir} with corresponding \code{print}
+function. The object is a list containing the following components:
+\item{sir}{Separation in ranking metric.}
+\item{ranking}{A named numeric vector with rankings, i.e.,
+  SUCRAs or P-scores.}
+\item{ranking.matrix}{A square matrix with the probabilities
+  for each possible rank (if information is available).}
+\item{pooled}{As defined above.}
 }
 \description{
 Separation in ranking (SIR) is a metric to quantify the uncertainty in
-a treatment hierarchy in network neta-analysis
+a treatment hierarchy in network meta-analysis
 }
 \details{
-Argument \code{x} can be
+This function calculates the separation in ranking (SIR) metric to quantify 
+the uncertainty in a treatment hierarchy in network meta-analysis
+(Wiggle et al., 2024).
+  
+Argument \code{x} providing information on the treatment hierarchy is the
+only mandatory argument. The following input formats can be provided:
 \itemize{
- \item a square matrix where the rows represent ranks and the columns
-   treatments,
- \item a vector with SUCRAs or P-scores.
+ \item vector representing a ranking metric, i.e., SUCRAs or P-scores,
+ \item square matrix with the probabilities for each possible rank
+ (with treatments in rows and ranks in columns).
 }
+It is also possible to provide an R object created with
+\code{\link[netmeta]{netrank}} (ranking metric) or
+\code{\link[netmeta]{rankogram}} (probabilities for each possible rank)
+from R package \bold{netmeta}.
 }
 \examples{
 \dontrun{
@@ -42,11 +81,13 @@ p1 <- pairwise(list(treat1, treat2, treat3),
 net1 <- netmeta(p1)
 
 rg1 <- rankogram(net1)
-rg1$ranking.matrix.common
-t(rg1$ranking.matrix.common)
-
+print(rg1, random = FALSE)
 netrank(rg1, random = FALSE)
-sir(t(rg1$ranking.matrix.common))
+
+sir(rg1)
+summary(sir(rg1))
+
+sir(netrank(rg1))
 sir(netrank(rg1)$ranking.common)
 
 data(Senn2013)
@@ -54,11 +95,11 @@ net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
                 data = Senn2013, sm = "MD", random = FALSE, nchar.trts = 4)
 
 rg2 <- rankogram(net2)
-rg2$ranking.matrix.common
-t(rg2$ranking.matrix.common)
+print(rg2)
+netrank(rg2)
 
-netrank(rg2, random = FALSE)
-sir(t(rg2$ranking.matrix.common))
+sir(rg2)
+sir(netrank(rg2))
 sir(netrank(rg2)$ranking.common)
 }
 
@@ -72,3 +113,5 @@ Hierarchies in Network Meta-Analysis
 Augustine Wigle \email{amhwigle@uwaterloo.ca},
   Guido Schwarzer \email{guido.schwarzer@uniklinik-freiburg.de}
 }
+\keyword{print}
+\keyword{summary}

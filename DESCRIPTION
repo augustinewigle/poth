@@ -1,7 +1,7 @@
 Package: sir
 Title: Calculate Separation In Ranking (SIR)
 Version: 0.1-1
-Date: 2024-05-07
+Date: 2024-05-08
 Imports: ggplot2, stringr
 Suggests: netmeta
 Authors@R: c(person("Augustine", "Wigle",

@@ -1,4 +1,4 @@
-#' Calculate p-scores from a set of relative effects and standard errors
+#' Calculate P-scores from a set of relative effects and standard errors
 #'
 #' @param diffs Matrix of relative effects
 #' @param ses Matrix of estimated standard errors for relative effects
@@ -34,7 +34,7 @@ pscores <- function(diffs,
   for (i in 1:n)
     for (j in 1:n)
       if (i != j)
-        a_mat[i,j] <- diffs[i,j]/ses[i,j]
+        a_mat[i, j] <- diffs[i, j] / ses[i, j]
 
   dir <- ifelse(largerbetter, 1, -1)
 
@@ -42,7 +42,7 @@ pscores <- function(diffs,
 
   # calculate p-scores
   for (i in 1:n)
-    pscores[i] <- sum(pnorm(a_mat[i,]*dir), na.rm = T)/(n-1)
+    pscores[i] <- sum(pnorm(a_mat[i,] * dir), na.rm = TRUE) / (n - 1)
   
   names(pscores) <- trts
 

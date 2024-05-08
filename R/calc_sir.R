@@ -2,22 +2,48 @@
 #' 
 #' @description
 #' Separation in ranking (SIR) is a metric to quantify the uncertainty in
-#' a treatment hierarchy in network neta-analysis
+#' a treatment hierarchy in network meta-analysis
 #' 
-#' @param x A square matrix with rankings or a vector of SUCRA values
-#'   or P-scores (see Details).
+#' @param x Mandatory argument with suitable information on the treatment
+#'   hierarchy (see Details).
+#' @param pooled A character string indicating whether the treatment hierarchy
+#'   is based on a common or random effects model. Either \code{"common"} or
+#'   \code{"random"}, can be abbreviated.
 #' @param trts An optional vector with treatment names. Must match the
 #'   order of treatments provided for argument \code{x}.
+#' @param sort A logical indicating whether printout should be sorted
+#'   by decreasing ranking metric.
+#' @param digits Minimal number of significant digits, see
+#'   \code{\link{print.default}}.
+#' @param object An object of class \code{summary.sir}.
+#' @param \dots Additional arguments (ignored).
 #'
 #' @details
-#' Argument \code{x} can be
+#' This function calculates the separation in ranking (SIR) metric to quantify 
+#' the uncertainty in a treatment hierarchy in network meta-analysis
+#' (Wiggle et al., 2024).
+#'   
+#' Argument \code{x} providing information on the treatment hierarchy is the
+#' only mandatory argument. The following input formats can be provided:
 #' \itemize{
-#'  \item a square matrix where the rows represent ranks and the columns
-#'    treatments,
-#'  \item a vector with SUCRAs or P-scores.
+#'  \item vector representing a ranking metric, i.e., SUCRAs or P-scores,
+#'  \item square matrix with the probabilities for each possible rank
+#'  (with treatments in rows and ranks in columns).
 #' }
+#' It is also possible to provide an R object created with
+#' \code{\link[netmeta]{netrank}} (ranking metric) or
+#' \code{\link[netmeta]{rankogram}} (probabilities for each possible rank)
+#' from R package \bold{netmeta}.
 #'
-#' @return A list with elements 'sucras' and 'sir'.
+#' @return
+#' An object of class \code{sir} with corresponding \code{print}
+#' function. The object is a list containing the following components:
+#' \item{sir}{Separation in ranking metric.}
+#' \item{ranking}{A named numeric vector with rankings, i.e.,
+#'   SUCRAs or P-scores.}
+#' \item{ranking.matrix}{A square matrix with the probabilities
+#'   for each possible rank (if information is available).}
+#' \item{pooled}{As defined above.}
 #'
 #' @author Augustine Wigle \email{amhwigle@uwaterloo.ca},
 #'   Guido Schwarzer \email{guido.schwarzer@@uniklinik-freiburg.de}
@@ -41,11 +67,13 @@
 #' net1 <- netmeta(p1)
 #' 
 #' rg1 <- rankogram(net1)
-#' rg1$ranking.matrix.common
-#' t(rg1$ranking.matrix.common)
-#' 
+#' print(rg1, random = FALSE)
 #' netrank(rg1, random = FALSE)
-#' sir(t(rg1$ranking.matrix.common))
+#' 
+#' sir(rg1)
+#' summary(sir(rg1))
+#' 
+#' sir(netrank(rg1))
 #' sir(netrank(rg1)$ranking.common)
 #' 
 #' data(Senn2013)
@@ -53,60 +81,188 @@
 #'                 data = Senn2013, sm = "MD", random = FALSE, nchar.trts = 4)
 #' 
 #' rg2 <- rankogram(net2)
-#' rg2$ranking.matrix.common
-#' t(rg2$ranking.matrix.common)
+#' print(rg2)
+#' netrank(rg2)
 #' 
-#' netrank(rg2, random = FALSE)
-#' sir(t(rg2$ranking.matrix.common))
+#' sir(rg2)
+#' sir(netrank(rg2))
 #' sir(netrank(rg2)$ranking.common)
 #' }
 #' 
 #' @export sir
 
-sir <- function(x, trts = NULL) {
-
+sir <- function(x, pooled, trts = NULL) {
+  
+  #
+  # Set argument pooled
+  #
+  if (!missing(pooled)) {
+    pooled <- setchar(pooled, c("common", "random", "fixed"))
+    pooled[pooled == "fixed"] <- "common"
+  }
+  else if (inherits(x, c("netrank", "rankogram"))) {
+    if (!x$common & x$random)
+      pooled <- "random"
+    else
+      pooled <- "common"
+  }
+  else
+    pooled <- ""
+  
+  
+  #
+  # Calculate SIR
+  #
+  
   if (is.matrix(x)) {
-    # error checking
+    # Error checking
     if (nrow(x) != ncol(x))
-      stop("Argument 'x' must be a square matrix.")
+      stop("Argument 'x' must be a square ranking matrix.")
     else if (any(abs(apply(x, 1, sum) - 1) > 1e-7))
       warning("The rows of a ranking matrix should sum to 1.")
     else if (any(abs(apply(x, 2, sum) - 1) > 1e-7))
       warning("The columns of a ranking matrix should sum to 1.")
-
-    n <- ncol(x)
-
-    rank_e <- apply(seq(1:n) * x, 2, sum)
-
-    sucras <- (n - rank_e) / (n - 1)
-
-
-    rank_vars <- numeric(n)
-    
+    #
+    ranking.matrix <- x
+    #
+    n <- nrow(x)
+    n.seq <- seq_len(n)
+    rank_e <- apply(n.seq * x, 1, sum)
+    #
+    rank_vars <- vector("numeric", n)
+    #
     for (i in 1:n)
-      rank_vars[i] <- sum((seq(1:n) - rank_e[i])^2 * x[, i])
-    
+      rank_vars[i] <- sum((n.seq - rank_e[i])^2 * x[i, ])
+    #
+    ranking <- (n - rank_e) / (n - 1)
+    #
     sir <- 1 - sum(rank_vars) * 12 / n / (n + 1) / (n - 1)
   }
-  else if (is.vector(x) & !is.list(x)) {
-    # error checking
-    if (abs(mean(x)) - 0.5 > 1e-7)
-      warning("The mean of the sucras should be 0.5. Check your values.")
-    
-    n <- length(x)
-    
-    sucras <- x
-    sir <- 3 * ((1 - n) / (n + 1) + 4 * (n - 1) / (n * (n + 1)) * sum(sucras^2))
+  else if ((is.vector(x) & !is.list(x)) ||
+           inherits(x, c("netrank", "rankogram"))) {
+    #
+    ranking.matrix <- NULL
+    #
+    if (inherits(x, "rankogram")) {
+      n <- x$x$n
+      #
+      if (pooled == "common") {
+        ranking <- x$ranking.common
+        ranking.matrix <- x$ranking.matrix.common
+        #
+        x <- x$ranking.matrix.common
+      }
+      else {
+        ranking <- x$ranking.random
+        ranking.matrix <- x$ranking.matrix.random
+        #
+        x <- x$ranking.matrix.random
+      }
+    }
+    else if (inherits(x, "netrank")) {
+      n <- x$x$n
+      #
+      if (pooled == "common") {
+        ranking <- x$ranking.common
+        #
+        x <- x$ranking.matrix.common
+      }
+      else {
+        ranking <- x$ranking.random
+        ranking.matrix <- x$ranking.matrix.random
+        #
+        x <- x$ranking.matrix.random
+      }
+    }
+    else {
+      # error checking
+      if (abs(mean(x)) - 0.5 > 1e-7)
+        warning("The mean of the ranking should be 0.5. Check your values.")
+      #
+      n <- length(x)
+      ranking <- x
+    }
+    #
+    sir <- 3 * ((1 - n) / (n + 1) + 4 * (n - 1) / (n * (n + 1)) * sum(ranking^2))
   }
   else
     stop("Argument 'x' must be a ranking matrix or vector.")
   
   if (!is.null(trts)) {
-    if (length(trts) != length(sucras))
-      stop("Different number of treatment names and SUCRAs / P-scores.")
+    if (length(trts) != length(ranking))
+      stop("Different number of treatment names and rankings.")
     #
-    names(sucras) <- trts
+    names(ranking) <- trts
   }
   
-  return(list(sucras = sort(sucras, decreasing = TRUE), sir = sir))
+  res <- list(sir = sir, ranking = ranking, ranking.matrix = ranking.matrix,
+              pooled = pooled)
+  class(res) <- "sir"
+  #
+  res
+}
+
+#' @rdname sir
+#' @keywords print
+#' @method print sir
+#' @export
+
+print.sir <- function(x, sort = TRUE, digits = 3, ...) {
+  class(x) <- "list"
+  #
+  if (sort)
+    seq <- rev(order(x$ranking))
+  else
+    seq <- seq_along(x$ranking)
+  #
+  x$sir <- round(x$sir, digits)
+  x$ranking <- round(x$ranking[seq], digits)
+  #
+  x$ranking.matrix <- NULL
+  #
+  if (x$pooled == "")
+    x$pooled <- NULL
+  #
+  print(x)
+  #
+  invisible(NULL)
+}
+
+#' @rdname sir
+#' @keywords summary
+#' @method summary sir
+#' @export
+
+summary.sir <- function(object, ...) {
+  res <- object
+  class(res) <- "summary.sir"
+  res
+}
+
+
+#' @rdname sir
+#' @keywords print
+#' @method print summary.sir
+#' @export
+
+print.summary.sir <- function(x, sort = TRUE, digits = 3, ...) {
+  class(x) <- "list"
+  #
+  if (sort)
+    seq <- rev(order(x$ranking))
+  else
+    seq <- seq_along(x$ranking)
+  #
+  x$sir <- round(x$sir, digits)
+  x$ranking <- round(x$ranking[seq], digits)
+  #
+  if (!is.null(x$ranking.matrix))
+    x$ranking.matrix <- round(x$ranking.matrix[seq, ], digits)
+  #
+  if (x$pooled == "")
+    x$pooled <- NULL
+  #
+  print(x)
+  #
+  invisible(NULL)
 }
