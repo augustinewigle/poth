@@ -7,45 +7,45 @@
 #' 
 #' @export
 
-rank_mat <- function(samples, largerbetter, trts = NA) {
+rank_mat <- function(x, largerbetter, trts = NA) {
 
-  nt <- ncol(samples)
+  nt <- ncol(x)
 
   # name check
   if (length(trts) != nt) {
 
-    if(is.null(colnames(samples))) {
+    if(is.null(colnames(x))) {
 
       warning("Please specify treatment names. Assigning generic treatment names")
 
       trts <- paste0("trt", 1:nt)
 
-      colnames(samples) <- trts
+      colnames(x) <- trts
 
     }
 
-    trts <- colnames(samples)
+    trts <- colnames(x)
 
   } else {
 
-    colnames(samples) <- trts
+    colnames(x) <- trts
 
   }
 
-  nt <- ncol(samples)
+  nt <- ncol(x)
 
   rank_mat <- matrix(nrow = nt, ncol = nt)
 
   # Ranks for every row of the matrix:
-  sorted <- t(apply(samples * ifelse(largerbetter, -1, 1), 1, rank))
-  colnames(sorted) <- colnames(samples)
+  sorted <- t(apply(x * ifelse(largerbetter, -1, 1), 1, rank))
+  colnames(sorted) <- colnames(x)
 
   # columns of rank_mat are treatments, rows are ranks
   for (i in 1:nt)
     for (j in 1:nt)
       rank_mat[j, i] <- mean(sorted[, i] == j)
   #
-  colnames(rank_mat) <- colnames(samples)
+  colnames(rank_mat) <- colnames(x)
   rownames(rank_mat) <- 1:nrow(rank_mat)
   
   rank_mat

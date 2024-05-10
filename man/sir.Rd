@@ -69,38 +69,40 @@ from R package \bold{netmeta}.
 }
 \examples{
 \dontrun{
-# Make results reproducible
-set.seed(1909)
-
 # R package netmeta must be available
 library("netmeta")
 data(smokingcessation)
 p1 <- pairwise(list(treat1, treat2, treat3),
-               event = list(event1, event2, event3), n = list(n1, n2, n3),
-               data = smokingcessation, sm = "OR")
-net1 <- netmeta(p1)
+  event = list(event1, event2, event3), n = list(n1, n2, n3),
+  data = smokingcessation, sm = "OR")
+net1 <- netmeta(p1, random = FALSE)
 
+# Calculate probabilities for each possible rank
+set.seed(1909) # make results reproducible
 rg1 <- rankogram(net1)
-print(rg1, random = FALSE)
-netrank(rg1, random = FALSE)
+rg1
 
-sir(rg1)
-summary(sir(rg1))
+# Calculate SIR
+s1 <- sir(rg1)
+s1
 
-sir(netrank(rg1))
-sir(netrank(rg1)$ranking.common)
+# Also print probabilities for each possible rank
+summary(s1)
+
+# Use SUCRAs to calculate SIR
+nr1 <- netrank(rg1)
+nr1
+sir(nr1)
+sir(nr1$ranking.common)
 
 data(Senn2013)
 net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
-                data = Senn2013, sm = "MD", random = FALSE, nchar.trts = 4)
+                data = Senn2013, sm = "MD", random = FALSE)
 
-rg2 <- rankogram(net2)
-print(rg2)
-netrank(rg2)
-
-sir(rg2)
-sir(netrank(rg2))
-sir(netrank(rg2)$ranking.common)
+# Use P-scores to calculate SIR
+nr2 <- netrank(net2)
+nr2
+sir(nr2)
 }
 
 }
