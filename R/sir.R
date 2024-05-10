@@ -6,6 +6,10 @@
 #' 
 #' @param x Mandatory argument with suitable information on the treatment
 #'   hierarchy (see Details).
+#' @param se Matrix of estimated standard errors for relative effects.
+#' @param small.values A character string specifying whether small
+#'   outcome values indicate a beneficial (\code{"desirable"}) or
+#'   harmful (\code{"undesirable"}) effect, can be abbreviated.
 #' @param pooled A character string indicating whether the treatment hierarchy
 #'   is based on a common or random effects model. Either \code{"common"} or
 #'   \code{"random"}, can be abbreviated.
@@ -25,16 +29,29 @@
 #'   
 #' Argument \code{x} providing information on the treatment hierarchy is the
 #' only mandatory argument. The following input formats can be provided:
-#' \itemize{
+#' \enumerate{
 #'  \item vector representing a ranking metric, i.e., SUCRAs or P-scores,
 #'  \item square matrix with the probabilities for each possible rank
-#'  (with treatments in rows and ranks in columns).
+#'  (with treatments in rows and ranks in columns),
+#'  \item MCMC samples (with samples in rows and treatments in columns),
+#'  \item relative effect matrix,
+#'  \item R object created with \code{\link[netmeta]{netmeta}},
+#'    \code{\link[netmeta]{netrank}}, or \code{\link[netmeta]{rankogram}}
+#'    object from R package \bold{netmeta}.
 #' }
-#' It is also possible to provide an R object created with
-#' \code{\link[netmeta]{netrank}} (ranking metric) or
-#' \code{\link[netmeta]{rankogram}} (probabilities for each possible rank)
-#' from R package \bold{netmeta}.
 #'
+#' Argument \code{se} must be provided if argument \code{x} is a matrix with
+#' relative effects. Otherwise, argument \code{se} is ignored.
+#'
+#' Argument \code{small.values} must be provided if argument \code{x} contains
+#' MCMC samples, relative effects, or is an object created with
+#' \code{\link[netmeta]{netmeta}}. This argument can be provided for an R
+#' object created with \code{\link[netmeta]{netrank}} or
+#' \code{\link[netmeta]{rankogram}} and is ignored otherwise.
+#'
+#' Argument \code{trts} is ignored for \code{\link[netmeta]{netmeta}},
+#' \code{\link[netmeta]{netrank}}, and \code{\link[netmeta]{rankogram}} objects.
+#' 
 #' @return
 #' An object of class \code{sir} with corresponding \code{print}
 #' function. The object is a list containing the following components:
@@ -93,16 +110,19 @@
 #' 
 #' @export sir
 
-sir <- function(x, pooled, trts = NULL) {
+sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
   
   #
-  # Set argument pooled
+  # Set arguments
+  #
+  
+  small.values <- setsv(small.values)
   #
   if (!missing(pooled)) {
     pooled <- setchar(pooled, c("common", "random", "fixed"))
     pooled[pooled == "fixed"] <- "common"
   }
-  else if (inherits(x, c("netrank", "rankogram"))) {
+  else if (inherits(x, c("netmeta", "netrank", "rankogram"))) {
     if (!x$common & x$random)
       pooled <- "random"
     else
@@ -111,30 +131,77 @@ sir <- function(x, pooled, trts = NULL) {
   else
     pooled <- ""
   
-  
   #
   # Calculate SIR
   #
   
-  if (is.matrix(x)) {
-    # Error checking
-    if (nrow(x) != ncol(x))
-      stop("Argument 'x' must be a square ranking matrix.")
-    else if (any(abs(apply(x, 1, sum) - 1) > 1e-7))
-      warning("The rows of a ranking matrix should sum to 1.")
-    else if (any(abs(apply(x, 2, sum) - 1) > 1e-7))
-      warning("The columns of a ranking matrix should sum to 1.")
+  if ((is.matrix(x) & !missing(se)) || inherits(x, "netmeta")) {
     #
-    ranking.matrix <- x
+    # Input: matrices with relative effects and standard errors
     #
-    n <- nrow(x)
+    if (inherits(x, "netmeta")) {
+      if (pooled == "common") {
+        TE <- x$TE.common
+        se <- x$seTE.common
+      }
+      else {
+        TE <- x$TE.random
+        se <- x$seTE.random
+      }
+      #
+      input <- "netmeta"
+      #
+      trts <- NULL
+    }
+    else {
+      if (!is.matrix(se))
+        stop("Argument 'se' must be a matrix with standard errors.")
+      #
+      TE <- x
+      #
+      input <- "effects.se"
+    }
+    #
+    ranking.matrix <- NULL
+    #
+    n <- ncol(TE)
+    ranking <- pscores(TE, se, small.values, trts)
+    #
+    sir <-
+      3 * ((1 - n) / (n + 1) + 4 * (n - 1) / (n * (n + 1)) * sum(ranking^2))
+  }
+  else if ((is.matrix(x) | is.data.frame(x)) & missing(se)) {
+    if (ncol(x) == nrow(x)) {
+      #
+      # Input: ranking matrix
+      #
+      if (any(abs(apply(x, 1, sum) - 1) > 1e-7))
+        warning("The rows of a ranking matrix should sum to 1.")
+      else if (any(abs(apply(x, 2, sum) - 1) > 1e-7))
+        warning("The columns of a ranking matrix should sum to 1.")
+      #
+      ranking.matrix <- x
+      #
+      input <- "ranking.matrix"
+    }
+    else {
+      #
+      # Input: MCMC samples
+      #
+      ranking.matrix <- rankMCMC(x, small.values, trts)
+      #
+      input <- "mcmc.samples"
+    }
+    #
+    n <- ncol(x)
     n.seq <- seq_len(n)
-    rank_e <- apply(n.seq * x, 1, sum)
+    #
+    rank_e <- apply(col(ranking.matrix) * ranking.matrix, 1, sum)
     #
     rank_vars <- vector("numeric", n)
     #
-    for (i in 1:n)
-      rank_vars[i] <- sum((n.seq - rank_e[i])^2 * x[i, ])
+    for (i in n.seq)
+      rank_vars[i] <- sum((n.seq - rank_e[i])^2 * ranking.matrix[i, ])
     #
     ranking <- (n - rank_e) / (n - 1)
     #
@@ -143,7 +210,7 @@ sir <- function(x, pooled, trts = NULL) {
   else if ((is.vector(x) & !is.list(x)) ||
            inherits(x, c("netrank", "rankogram"))) {
     #
-    ranking.matrix <- NULL
+    # Input: ranking metrix or R object created with netrank() or rankogram()
     #
     if (inherits(x, "rankogram")) {
       n <- x$x$n
@@ -151,58 +218,84 @@ sir <- function(x, pooled, trts = NULL) {
       if (pooled == "common") {
         ranking <- x$ranking.common
         ranking.matrix <- x$ranking.matrix.common
-        #
-        x <- x$ranking.matrix.common
       }
       else {
         ranking <- x$ranking.random
         ranking.matrix <- x$ranking.matrix.random
-        #
-        x <- x$ranking.matrix.random
       }
+      #
+      input <- "rankogram"
+      #
+      trts <- NULL
     }
     else if (inherits(x, "netrank")) {
       n <- x$x$n
       #
       if (pooled == "common") {
         ranking <- x$ranking.common
-        #
-        x <- x$ranking.matrix.common
+        ranking.matrix <- x$ranking.matrix.common
       }
       else {
         ranking <- x$ranking.random
         ranking.matrix <- x$ranking.matrix.random
-        #
-        x <- x$ranking.matrix.random
       }
+      #
+      input <- "netrank"
     }
     else {
-      # error checking
       if (abs(mean(x)) - 0.5 > 1e-7)
         warning("The mean of the ranking should be 0.5. Check your values.")
       #
       n <- length(x)
+      #
       ranking <- x
+      ranking.matrix <- NULL
+      #
+      input <- "ranking"
+      #
+      trts <- NULL
     }
     #
-    sir <- 3 * ((1 - n) / (n + 1) + 4 * (n - 1) / (n * (n + 1)) * sum(ranking^2))
+    sir <-
+      3 * ((1 - n) / (n + 1) + 4 * (n - 1) / (n * (n + 1)) * sum(ranking^2))
   }
   else
-    stop("Argument 'x' must be a ranking matrix or vector.")
+    stop("Argument 'x' must be a ranking vector, matrix or vector.")
+  
   
   if (!is.null(trts)) {
     if (length(trts) != length(ranking))
       stop("Different number of treatment names and rankings.")
     #
     names(ranking) <- trts
+    #
+    if (!is.null(ranking.matrix))
+      rownames(ranking.matrix) <- trts
+    #
+    if (input == "mcmc.samples")
+      colnames(x) <- trts
+    #
+    if (input == "effects.se") {
+      rownames(TE) <- colnames(TE) <- trts
+      rownames(se) <- colnames(se) <- trts
+    }
   }
+  else
+    trts <- names(ranking)
   
   res <- list(sir = sir, ranking = ranking, ranking.matrix = ranking.matrix,
-              pooled = pooled)
+              small.values = small.values, pooled = pooled,
+              n = n,
+              x = x, se = se, input = input, trts = trts)
+  #
+  if (inherits(x, "netmeta"))
+    res$TE <- TE
+  #
   class(res) <- "sir"
   #
   res
 }
+
 
 #' @rdname sir
 #' @keywords print
@@ -220,7 +313,8 @@ print.sir <- function(x, sort = TRUE, digits = 3, ...) {
   x$sir <- round(x$sir, digits)
   x$ranking <- round(x$ranking[seq], digits)
   #
-  x$ranking.matrix <- NULL
+  x$ranking.matrix <- x$x <- x$se <- x$n <- x$input <- x$trts <-
+    x$small.values <- NULL
   #
   if (x$pooled == "")
     x$pooled <- NULL
@@ -263,6 +357,8 @@ print.summary.sir <- function(x, sort = TRUE, digits = 3, ...) {
   #
   if (x$pooled == "")
     x$pooled <- NULL
+  #
+  x$x <- x$se <- x$n <- x$input <- x$trts <- x$small.values <- NULL
   #
   print(x)
   #

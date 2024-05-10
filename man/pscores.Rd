@@ -4,16 +4,18 @@
 \alias{pscores}
 \title{Calculate P-scores from a set of relative effects and standard errors}
 \usage{
-pscores(diffs, ses, largerbetter = TRUE, trts = NULL)
+pscores(TE, seTE, small.values = "desirable", trts = NULL)
 }
 \arguments{
-\item{diffs}{Matrix of relative effects}
+\item{TE}{Matrix of relative effects}
 
-\item{ses}{Matrix of estimated standard errors for relative effects}
+\item{seTE}{Matrix of estimated standard errors for relative effects}
 
-\item{largerbetter}{Logical, T if larger outcomes are good. Defauls is T}
+\item{small.values}{A character string specifying whether small
+outcome values indicate a beneficial (\code{"desirable"}) or
+harmful (\code{"undesirable"}) effect, can be abbreviated.}
 
-\item{trts}{optional; vector of treatment names matching order in diffs and sds}
+\item{trts}{optional; vector of treatment names matching order in TE and sds}
 }
 \value{
 named vector of P-scores

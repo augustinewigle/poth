@@ -1,3 +1,3 @@
-## sir, version 0.1-1 (2024-mm-dd)
+## sir, version 0.2-0 (2024-mm-dd)
 
 - First CRAN release
