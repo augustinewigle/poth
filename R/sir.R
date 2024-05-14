@@ -303,6 +303,9 @@ sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
 #' @export
 
 print.sir <- function(x, sort = TRUE, digits = 3, ...) {
+  
+  chkclass(x, "sir")
+  
   class(x) <- "list"
   #
   if (sort)
@@ -314,7 +317,7 @@ print.sir <- function(x, sort = TRUE, digits = 3, ...) {
   x$ranking <- round(x$ranking[seq], digits)
   #
   x$ranking.matrix <- x$x <- x$se <- x$n <- x$input <- x$trts <-
-    x$small.values <- NULL
+    x$TE <- x$small.values <- NULL
   #
   if (x$pooled == "")
     x$pooled <- NULL
@@ -342,6 +345,9 @@ summary.sir <- function(object, ...) {
 #' @export
 
 print.summary.sir <- function(x, sort = TRUE, digits = 3, ...) {
+  
+  chkclass(x, "summary.sir")
+  
   class(x) <- "list"
   #
   if (sort)

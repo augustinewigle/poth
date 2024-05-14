@@ -3,16 +3,17 @@
 #' @param x An R object of class \code{sir}.
 #' @param sort A logical indicating whether results should be sorted
 #'   by decreasing ranking metric.
+#' @param digits Minimal number of significant digits, see
+#'   \code{\link{print.default}}.
 #' @param \dots Additional arguments.
 #' 
-#' @return A data frame with the following variables:
-#' \item{residuals}{...}
-#' \item{sir}{...}
-#' \item{trt_name}{...}
-#' \item{orig_score}{...}
-#' \item{score_type}{...}
-#' \item{rank}{...}
-#' \item{ratio}{...}
+#' @return A data frame with additional class \code{loo.sir} and the following
+#'   variables:
+#' \item{trt}{Treatment names.}
+#' \item{score}{Ranking metric (global).}
+#' \item{rank}{Treatment rank (global).}
+#' \item{residual}{Residual (global SIR minus leave-one-out SIR.}
+#' \item{ratio}{Ratio of residual devided by absolute sum of residuals.}
 #'
 #' @examples
 #' \dontrun{
@@ -24,9 +25,17 @@
 #'   data = smokingcessation, sm = "OR")
 #' net1 <- netmeta(p1, random = FALSE)
 #' 
-#' # Use P-scores to calculate SIR
+#' # Leave-one-out method
 #' loo1 <- loo(sir(net1))
 #' loo1
+#' 
+#' data(Senn2013)
+#' net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
+#'                 data = Senn2013, sm = "MD", random = FALSE)
+#' 
+#' # Leave-one-out method (without sorting by ranking metric)
+#' loo2 <- loo(sir(net2), sort = FALSE)
+#' loo2
 #' }
 #' 
 #' @rdname loo
@@ -42,14 +51,14 @@ loo.sir <- function(x, sort = TRUE, ...) {
   
   if (x$input == "mcmc.samples") {
     score_type <- "SUCRA"
-    scores <- x$ranking
+    ranking <- x$ranking
     samples <- x$x
     small.values <- x$small.values
     #
-    if (sort) {
-      seq <- order(scores, decreasing = FALSE)
-      samples <- samples[ , seq]
-    }
+    if (sort)
+      seq <- order(ranking, decreasing = FALSE)
+    else
+      seq <- seq_along(ranking)
     #
     loo_rps <-
       lapply(seq_len(n),
@@ -62,7 +71,7 @@ loo.sir <- function(x, sort = TRUE, ...) {
   else if (x$input %in% c("effects.se", "netmeta")) {
     score_type <- "P-score"
     #
-    scores <- x$ranking
+    ranking <- x$ranking
     #
     if (x$input == "effects.se") {
       TE <- x$x
@@ -75,16 +84,15 @@ loo.sir <- function(x, sort = TRUE, ...) {
     #
     small.values <- x$small.values
     #
-    if (sort) {
-      seq <- order(scores, decreasing = TRUE)
-      TE <- TE[seq, seq]
-      seTE <- seTE[seq, seq]
-    }
+    if (sort)
+      seq <- order(ranking, decreasing = TRUE)
+    else
+      seq <- seq_along(ranking)
     #
     loo_pscores <-
       lapply(seq_len(n),
-             function(x)
-               pscores(TE[-x, -x], seTE[-x, -x], small.values))
+             function(drp)
+               pscores(TE[-drp, -drp], seTE[-drp, -drp], small.values))
     names(loo_pscores) <- colnames(TE)
     #
     loo_sirs <- sapply(loo_pscores, function(x) sir(x)$sir)
@@ -96,20 +104,19 @@ loo.sir <- function(x, sort = TRUE, ...) {
   #
   # Put everything together
   #
-  sir_res <- x$sir - loo_sirs
+  residuals <- x$sir - loo_sirs
   #
-  res <- data.frame(residuals = sir_res,
-                    sir = x$sir,
-                    #
-                    trt_name = names(sir_res),
-                    orig_score = scores[seq],
-                    score_type = score_type,
-                    rank = rank(-scores[seq]),
-                    ratio = sir_res / sum(abs(sir_res)))
+  res <- data.frame(trt = names(residuals),
+                    rank = rank(-ranking),
+                    score = ranking,
+                    residuals = residuals,
+                    ratio = residuals / sum(abs(residuals)))[seq, ]
   #
-  if (sort)
-    res <- res[order(res$rank), ]
-  
+  attr(res, "sir") <- x$sir
+  attr(res, "score_type") <- score_type
+  #
+  class(res) <- c("loo.sir", class(res))
+  #
   res
 }
 
@@ -119,3 +126,30 @@ loo.sir <- function(x, sort = TRUE, ...) {
 
 loo <- function(x, ...)
   UseMethod("loo")
+
+
+#' @rdname loo
+#' @keywords print
+#' @method print loo.sir
+#' @export
+
+print.loo.sir <- function(x, digits = 3, ...) {
+  
+  chkclass(x, "loo.sir")
+  #
+  sir <- attr(x, "sir")
+  score_type <- attr(x, "score_type")
+  #
+  rownames(x) <- x$trt
+  x$trt <- NULL
+  #
+  x$score <- round(x$score, digits)
+  x$residuals <- round(x$residuals, digits)
+  x$ratio <- round(x$ratio, digits)
+  #
+  class(x) <- "data.frame"
+  #
+  print(x)
+  #
+  invisible(NULL)
+}

@@ -2,6 +2,7 @@
 
 S3method(loo,sir)
 S3method(plot,loo.sir)
+S3method(print,loo.sir)
 S3method(print,sir)
 S3method(print,summary.sir)
 S3method(subset,sir)

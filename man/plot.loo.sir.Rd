@@ -4,13 +4,16 @@
 \alias{plot.loo.sir}
 \title{Plot results of leave-one-out method}
 \usage{
-\method{plot}{loo.sir}(x, plot_trts = TRUE, ...)
+\method{plot}{loo.sir}(x, labels = TRUE, digits = 3, ...)
 }
 \arguments{
 \item{x}{R object of class \code{sir}.}
 
-\item{plot_trts}{A logical indicating whether treatment names be included
-in the plot.}
+\item{labels}{A logical indicating whether treatment names should be
+shown in the plot.}
+
+\item{digits}{Minimal number of significant digits for global SIR, see
+\code{\link{print.default}}.}
 
 \item{\dots}{Additional arguments (ignored).}
 }
@@ -34,10 +37,19 @@ p1 <- pairwise(list(treat1, treat2, treat3),
   data = smokingcessation, sm = "OR")
 net1 <- netmeta(p1, random = FALSE)
 
-# Use P-scores to calculate SIR
+# Leave-one-out method
 loo1 <- loo(sir(net1))
 loo1
 plot(loo1)
+
+data(Senn2013)
+net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
+                data = Senn2013, sm = "MD", random = FALSE)
+
+# Leave-one-out method (without sorting by ranking metric)
+loo2 <- loo(sir(net2), sort = FALSE)
+loo2
+plot(loo2)
 }
 
 }

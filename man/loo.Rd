@@ -3,11 +3,14 @@
 \name{loo.sir}
 \alias{loo.sir}
 \alias{loo}
+\alias{print.loo.sir}
 \title{Leave-one-out method for separation in ranking (SIR) metric}
 \usage{
 \method{loo}{sir}(x, sort = TRUE, ...)
 
 loo(x, ...)
+
+\method{print}{loo.sir}(x, digits = 3, ...)
 }
 \arguments{
 \item{x}{An R object of class \code{sir}.}
@@ -16,16 +19,18 @@ loo(x, ...)
 by decreasing ranking metric.}
 
 \item{\dots}{Additional arguments.}
+
+\item{digits}{Minimal number of significant digits, see
+\code{\link{print.default}}.}
 }
 \value{
-A data frame with the following variables:
-\item{residuals}{...}
-\item{sir}{...}
-\item{trt_name}{...}
-\item{orig_score}{...}
-\item{score_type}{...}
-\item{rank}{...}
-\item{ratio}{...}
+A data frame with additional class \code{loo.sir} and the following
+  variables:
+\item{trt}{Treatment names.}
+\item{score}{Ranking metric (global).}
+\item{rank}{Treatment rank (global).}
+\item{residual}{Residual (global SIR minus leave-one-out SIR.}
+\item{ratio}{Ratio of residual devided by absolute sum of residuals.}
 }
 \description{
 Leave-one-out method for separation in ranking (SIR) metric
@@ -40,9 +45,18 @@ p1 <- pairwise(list(treat1, treat2, treat3),
   data = smokingcessation, sm = "OR")
 net1 <- netmeta(p1, random = FALSE)
 
-# Use P-scores to calculate SIR
+# Leave-one-out method
 loo1 <- loo(sir(net1))
 loo1
+
+data(Senn2013)
+net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
+                data = Senn2013, sm = "MD", random = FALSE)
+
+# Leave-one-out method (without sorting by ranking metric)
+loo2 <- loo(sir(net2), sort = FALSE)
+loo2
 }
 
 }
+\keyword{print}
