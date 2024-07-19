@@ -1,6 +1,6 @@
 Package: sir
 Type: Package
-Title: Calculate Separation In Ranking
+Title: Separation In Ranking for Network Meta-Analysis
 Version: 0.1.0
 Author: Augustine Wigle
 Maintainer: Augustine <amhwigle@uwaterloo.ca>
