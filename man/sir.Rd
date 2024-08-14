@@ -57,10 +57,10 @@ Separation in ranking (SIR) is a metric to quantify the uncertainty in
 a treatment hierarchy in network meta-analysis
 }
 \details{
-This function calculates the separation in ranking (SIR) metric to quantify 
+This function calculates the separation in ranking (SIR) metric to quantify
 the uncertainty in a treatment hierarchy in network meta-analysis
-(Wiggle et al., 2024).
-  
+(Wigle et al., 2024).
+
 Argument \code{x} providing information on the treatment hierarchy is the
 only mandatory argument. The following input formats can be provided:
 \enumerate{
@@ -126,7 +126,7 @@ sir(nr2)
 
 }
 \references{
-Wiggle A, ... (2024):
+Wigle A, ... (2024):
 Separation In Ranking: A Metric for Quantifying Uncertainty in Treatment
 Hierarchies in Network Meta-Analysis
 }

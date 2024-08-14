@@ -1,9 +1,9 @@
 #' Calculate separation in ranking (SIR) metric
-#' 
+#'
 #' @description
 #' Separation in ranking (SIR) is a metric to quantify the uncertainty in
 #' a treatment hierarchy in network meta-analysis
-#' 
+#'
 #' @param x Mandatory argument with suitable information on the treatment
 #'   hierarchy (see Details).
 #' @param se Matrix of estimated standard errors for relative effects.
@@ -23,10 +23,10 @@
 #' @param \dots Additional arguments (ignored).
 #'
 #' @details
-#' This function calculates the separation in ranking (SIR) metric to quantify 
+#' This function calculates the separation in ranking (SIR) metric to quantify
 #' the uncertainty in a treatment hierarchy in network meta-analysis
-#' (Wiggle et al., 2024).
-#'   
+#' (Wigle et al., 2024).
+#'
 #' Argument \code{x} providing information on the treatment hierarchy is the
 #' only mandatory argument. The following input formats can be provided:
 #' \enumerate{
@@ -51,7 +51,7 @@
 #'
 #' Argument \code{trts} is ignored for \code{\link[netmeta]{netmeta}},
 #' \code{\link[netmeta]{netrank}}, and \code{\link[netmeta]{rankogram}} objects.
-#' 
+#'
 #' @return
 #' An object of class \code{sir} with corresponding \code{print}
 #' function. The object is a list containing the following components:
@@ -66,7 +66,7 @@
 #'   Guido Schwarzer \email{guido.schwarzer@@uniklinik-freiburg.de}
 #'
 #' @references
-#' Wiggle A, ... (2024):
+#' Wigle A, ... (2024):
 #' Separation In Ranking: A Metric for Quantifying Uncertainty in Treatment
 #' Hierarchies in Network Meta-Analysis
 #'
@@ -79,43 +79,43 @@
 #'   event = list(event1, event2, event3), n = list(n1, n2, n3),
 #'   data = smokingcessation, sm = "OR")
 #' net1 <- netmeta(p1, random = FALSE)
-#' 
+#'
 #' # Calculate probabilities for each possible rank
 #' set.seed(1909) # make results reproducible
 #' rg1 <- rankogram(net1)
 #' rg1
-#' 
+#'
 #' # Calculate SIR
 #' s1 <- sir(rg1)
 #' s1
-#' 
+#'
 #' # Also print probabilities for each possible rank
 #' summary(s1)
-#' 
+#'
 #' # Use SUCRAs to calculate SIR
 #' nr1 <- netrank(rg1)
 #' nr1
 #' sir(nr1)
 #' sir(nr1$ranking.common)
-#' 
+#'
 #' data(Senn2013)
 #' net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
 #'                 data = Senn2013, sm = "MD", random = FALSE)
-#' 
+#'
 #' # Use P-scores to calculate SIR
 #' nr2 <- netrank(net2)
 #' nr2
 #' sir(nr2)
 #' }
-#' 
+#'
 #' @export sir
 
 sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
-  
+
   #
   # Set arguments
   #
-  
+
   small.values <- setsv(small.values)
   #
   if (!missing(pooled)) {
@@ -130,11 +130,11 @@ sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
   }
   else
     pooled <- ""
-  
+
   #
   # Calculate SIR
   #
-  
+
   if ((is.matrix(x) & !missing(se)) || inherits(x, "netmeta")) {
     #
     # Input: matrices with relative effects and standard errors
@@ -261,8 +261,8 @@ sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
   }
   else
     stop("Argument 'x' must be a ranking vector, matrix or vector.")
-  
-  
+
+
   if (!is.null(trts)) {
     if (length(trts) != length(ranking))
       stop("Different number of treatment names and rankings.")
@@ -282,7 +282,7 @@ sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
   }
   else
     trts <- names(ranking)
-  
+
   res <- list(sir = sir, ranking = ranking, ranking.matrix = ranking.matrix,
               small.values = small.values, pooled = pooled,
               n = n,
@@ -303,9 +303,9 @@ sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
 #' @export
 
 print.sir <- function(x, sort = TRUE, digits = 3, ...) {
-  
+
   chkclass(x, "sir")
-  
+
   class(x) <- "list"
   #
   if (sort)
@@ -345,9 +345,9 @@ summary.sir <- function(object, ...) {
 #' @export
 
 print.summary.sir <- function(x, sort = TRUE, digits = 3, ...) {
-  
+
   chkclass(x, "summary.sir")
-  
+
   class(x) <- "list"
   #
   if (sort)

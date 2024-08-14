@@ -2,7 +2,7 @@
 #' 
 #' R package \bold{sir} allows to calculate the separation in ranking (SIR)
 #' metric to quantify the uncertainty in a treatment hierarchy in network
-#' meta-analysis (Wiggle et al., 2024).
+#' meta-analysis (Wigle et al., 2024).
 #'
 #' @name sir-package
 #'
@@ -26,7 +26,7 @@
 #'   Guido Schwarzer \email{guido.schwarzer@@uniklinik-freiburg.de}
 #' 
 #' @references
-#' Wiggle A, ... (2024):
+#' Wigle A, ... (2024):
 #' Separation In Ranking: A Metric for Quantifying Uncertainty in Treatment
 #' Hierarchies in Network Meta-Analysis
 #'

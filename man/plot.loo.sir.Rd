@@ -25,7 +25,7 @@ Plot results of leave-one-out method for separation in ranking (SIR) metric
 }
 \details{
 Plot results of leave-one-out method for separation in ranking (SIR) metric
-(Wiggle et al., 2024).
+(Wigle et al., 2024).
 }
 \examples{
 \dontrun{
@@ -54,7 +54,7 @@ plot(loo2)
 
 }
 \references{
-Wiggle A, ... (2024):
+Wigle A, ... (2024):
 Separation In Ranking: A Metric for Quantifying Uncertainty in Treatment
 Hierarchies in Network Meta-Analysis
 }
