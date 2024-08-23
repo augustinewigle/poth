@@ -44,31 +44,45 @@ plot.cumul.sir <- function(x, labels = FALSE, trt.trunc = 3, digits = 3, ...) {
 
       short <- str_trunc(names(x$ranking), width = trt.trunc, ellipsis = "")
       ordered_short <- short[order(x$ranking, decreasing = TRUE)]
-      df$labels <- sapply(2:(length(df$sir)+1), function(x) paste(ordered_short[1:x], collapse = ", "))
+      labs <- sapply(2:(length(df$sir)+1), function(x) paste(ordered_short[1:x], collapse = ", "))
+      df$labels = str_wrap(labs, width = 10)
+
 
     } else {
 
       ordered <- names(x$ranking)[order(x$ranking, decreasing = TRUE)]
-      df$labels <- sapply(2:(length(df$sir)+1), function(x) paste(ordered[1:x], collapse = ", "))
+      labs <- sapply(2:(length(df$sir)+1), function(x) paste(ordered[1:x], collapse = ", "))
+      df$labels = str_wrap(labs, width = 10)
 
 
     }
 
+    p <- ggplot(df, aes(x = labels, y = sir)) +
+      geom_col(col = "black") +
+      geom_hline(yintercept = 0) +
+      scale_y_continuous(limits = c(0,1)) +
+      theme_bw() +
+      theme(legend.position = "none") +
+      labs(x = xlab, y = "cPOTH")
+
   } else {
 
-    xlab <- "Top x Treatments"
+    xlab <- "Best r Treatments"
 
     df$labels <- df$grp
 
+    p <- ggplot(df, aes(x = labels, y = sir)) +
+      geom_col(col = "black") +
+      geom_hline(yintercept = 0) +
+      scale_y_continuous(limits = c(0,1)) +
+      scale_x_continuous(breaks = 2:max(df$grp), minor_breaks = NULL) +
+      theme_bw() +
+      theme(legend.position = "none") +
+      labs(x = xlab, y = "cPOTH")
+
   }
 
-  p <- ggplot(df, aes(x = str_wrap(labels, width = 10), y = sir, fill = sir)) +
-    geom_col(col = "black") +
-    geom_hline(yintercept = 0) +
-    scale_y_continuous(limits = c(0,1)) +
-    theme_bw() +
-    theme(legend.position = "none") +
-    labs(x = xlab, y = "cPOTH")
+
 
   return(p)
 
