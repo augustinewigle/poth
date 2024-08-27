@@ -67,7 +67,7 @@ plot.cumul.sir <- function(x, labels = FALSE, trt.trunc = 3, digits = 3, ...) {
 
   } else {
 
-    xlab <- "Best r Treatments"
+    xlab <- "Best k Treatments"
 
     df$labels <- df$grp
 
