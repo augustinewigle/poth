@@ -58,7 +58,7 @@ loo.sir <- function(x, sort = TRUE, ...) {
     small.values <- x$small.values
     #
     if (sort)
-      seq <- order(ranking, decreasing = FALSE)
+      seq <- order(ranking, decreasing = TRUE)
     else
       seq <- seq_along(ranking)
     #
