@@ -6,7 +6,7 @@
 #' @param digits Minimal number of significant digits, see
 #'   \code{\link{print.default}}.
 #' @param \dots Additional arguments.
-#' 
+#'
 #' @return A data frame with additional class \code{loo.sir} and the following
 #'   variables:
 #' \item{trt}{Treatment names.}
@@ -24,35 +24,37 @@
 #'   event = list(event1, event2, event3), n = list(n1, n2, n3),
 #'   data = smokingcessation, sm = "OR")
 #' net1 <- netmeta(p1, random = FALSE)
-#' 
+#'
 #' # Leave-one-out method
 #' loo1 <- loo(sir(net1))
 #' loo1
-#' 
+#'
 #' data(Senn2013)
 #' net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
 #'                 data = Senn2013, sm = "MD", random = FALSE)
-#' 
+#'
 #' # Leave-one-out method (without sorting by ranking metric)
 #' loo2 <- loo(sir(net2), sort = FALSE)
 #' loo2
 #' }
-#' 
+#'
 #' @rdname loo
 #' @method loo sir
 #' @export
 
 loo.sir <- function(x, sort = TRUE, ...) {
-  
+
   chkclass(x, "sir")
-  
+
   n <- x$n
   trts <- x$trts
-  
+
   if (x$input == "mcmc.samples") {
     score_type <- "SUCRA"
+
     ranking <- x$ranking
     samples <- x$x
+    colnames(samples) <- trts
     small.values <- x$small.values
     #
     if (sort)
@@ -100,12 +102,12 @@ loo.sir <- function(x, sort = TRUE, ...) {
   }
   else
     stop("Leave-one-out method not available for input type '", x$input, "'.")
-  
-  #
+
   # Put everything together
   #
   residuals <- x$sir - loo_sirs
   #
+
   res <- data.frame(trt = names(residuals),
                     rank = rank(-ranking),
                     score = ranking,
@@ -134,7 +136,7 @@ loo <- function(x, ...)
 #' @export
 
 print.loo.sir <- function(x, digits = 3, ...) {
-  
+
   chkclass(x, "loo.sir")
   #
   sir <- attr(x, "sir")
