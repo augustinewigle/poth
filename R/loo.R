@@ -1,8 +1,6 @@
 #' Leave-one-out method for separation in ranking (SIR) metric
 #'
 #' @param x An R object of class \code{sir}.
-#' @param sort A logical indicating whether results should be sorted
-#'   by decreasing ranking metric.
 #' @param digits Minimal number of significant digits, see
 #'   \code{\link{print.default}}.
 #' @param \dots Additional arguments.
@@ -33,16 +31,13 @@
 #' net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
 #'                 data = Senn2013, sm = "MD", random = FALSE)
 #'
-#' # Leave-one-out method (without sorting by ranking metric)
-#' loo2 <- loo(sir(net2), sort = FALSE)
-#' loo2
 #' }
 #'
 #' @rdname loo
 #' @method loo sir
 #' @export
 
-loo.sir <- function(x, sort = TRUE, ...) {
+loo.sir <- function(x, ...) {
 
   chkclass(x, "sir")
 
@@ -57,10 +52,10 @@ loo.sir <- function(x, sort = TRUE, ...) {
     colnames(samples) <- trts
     small.values <- x$small.values
     #
-    if (sort)
+    # if (sort)
       seq <- order(ranking, decreasing = TRUE)
-    else
-      seq <- seq_along(ranking)
+    # else
+    #   seq <- seq_along(ranking)
     #
     loo_rps <-
       lapply(seq_len(n),
@@ -86,10 +81,10 @@ loo.sir <- function(x, sort = TRUE, ...) {
     #
     small.values <- x$small.values
     #
-    if (sort)
+    # if (sort)
       seq <- order(ranking, decreasing = TRUE)
-    else
-      seq <- seq_along(ranking)
+    # else
+    #   seq <- seq_along(ranking)
     #
     loo_pscores <-
       lapply(seq_len(n),
