@@ -1,22 +1,22 @@
-# sir: Calculate Separation In Ranking (SIR)
-Official Git repository of R package **sir**
+# poth: Calculate Separation In Ranking (POTH)
+Official Git repository of R package **poth**
 
-[![CRAN Version](http://www.r-pkg.org/badges/version/sir)](https://cran.r-project.org/package=sir)
-[![Monthly Downloads](http://cranlogs.r-pkg.org/badges/sir)](http://cranlogs.r-pkg.org/badges/sir)
-[![Total Downloads](http://cranlogs.r-pkg.org/badges/grand-total/sir)](http://cranlogs.r-pkg.org/badges/grand-total/sir)
+[![CRAN Version](http://www.r-pkg.org/badges/version/poth)](https://cran.r-project.org/package=poth)
+[![Monthly Downloads](http://cranlogs.r-pkg.org/badges/poth)](http://cranlogs.r-pkg.org/badges/poth)
+[![Total Downloads](http://cranlogs.r-pkg.org/badges/grand-total/poth)](http://cranlogs.r-pkg.org/badges/grand-total/poth)
 
 
 ## Description
 
-The sir package allows to calculate SIR and leave-one-out SIR for frequentist
+The poth package allows to calculate POTH and leave-one-out POTH for frequentist
 network meta-analysis.
 
 
 ## Installation
 
-### Current official [![CRAN Version](http://www.r-pkg.org/badges/version/sir)](https://cran.r-project.org/package=sir) release:
+### Current official [![CRAN Version](http://www.r-pkg.org/badges/version/poth)](https://cran.r-project.org/package=poth) release:
 ```r
-install.packages("sir")
+install.packages("poth")
 ```
 
 ### Current beta / GitHub release:
@@ -25,19 +25,19 @@ Installation using R package
 [**remotes**](https://cran.r-project.org/package=remotes):
 ```r
 install.packages("remotes")
-remotes::install_github("augustinewigle/sir")
+remotes::install_github("augustinewigle/poth")
 ```
 
 
 ### Bug Reports:
 
 You can report bugs on GitHub under
-[Issues](https://github.com/augustinewigle/sir/issues)
+[Issues](https://github.com/augustinewigle/poth/issues)
 
 or by using the R command
 
 ```r
-bug.report(package = "sir")
+bug.report(package = "poth")
 ```
 
 (which is not supported in RStudio).

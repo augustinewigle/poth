@@ -1,26 +1,26 @@
-#' sir: Brief overview of methods and general hints
+#' poth: Brief overview of methods and general hints
 #' 
-#' R package \bold{sir} allows to calculate the separation in ranking (SIR)
+#' R package \bold{poth} allows to calculate the precision of treatment hierarchy (POTH)
 #' metric to quantify the uncertainty in a treatment hierarchy in network
 #' meta-analysis (Wigle et al., 2024).
 #'
-#' @name sir-package
+#' @name poth-package
 #'
 #' @details
-#' R package \bold{sir} provides the following methods:
+#' R package \bold{poth} provides the following methods:
 #' \itemize{
-#' \item Calculate the separation in ranking metric (\code{\link{sir}})
-#' \item Conduct leave-one-out analysis (\code{\link{loo.sir}})
+#' \item Calculate the separation in ranking metric (\code{\link{poth}})
+#' \item Conduct leave-one-out analysis (\code{\link{loo.poth}})
 #' }
 #' 
-#' Type \code{help(package = "sir")} for a listing of R functions
-#' available in \bold{sir}.
+#' Type \code{help(package = "poth")} for a listing of R functions
+#' available in \bold{poth}.
 #' 
-#' Type \code{citation("sir")} on how to cite \bold{sir} in
+#' Type \code{citation("poth")} on how to cite \bold{poth} in
 #' publications.
 #' 
-#' The development version of \bold{sir} is available on GitHub
-#' \url{https://github.com/augustinewigle/sir}.
+#' The development version of \bold{poth} is available on GitHub
+#' \url{https://github.com/augustinewigle/poth}.
 #' 
 #' @author Augustine Wigle \email{amhwigle@uwaterloo.ca},
 #'   Guido Schwarzer \email{guido.schwarzer@@uniklinik-freiburg.de}

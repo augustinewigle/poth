@@ -32,5 +32,5 @@ check()
 # (6) Check examples
 #
 setwd("..")
-run_examples("sir", fresh = TRUE, run_dontrun = TRUE, run_donttest = TRUE)
+run_examples("poth", fresh = TRUE, run_dontrun = TRUE, run_donttest = TRUE)
 warnings()

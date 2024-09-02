@@ -1,6 +1,6 @@
-#' Calculate the local SIR for a subset of treatments
+#' Calculate the local POTH for a subset of treatments
 #'
-#' @param x An object of class \code{sir}.
+#' @param x An object of class \code{poth}.
 #' @param subset A character vector of treatment names to consider as the set
 #'   of competing treatments.
 #' @param top A single integer to define the number of treatments with the
@@ -9,7 +9,7 @@
 #'   smallest ranking metric to consider in subset.
 #' @param \dots Additional arguments (ignored).
 #' 
-#' @return An R object of class \code{sir}.
+#' @return An R object of class \code{poth}.
 #'
 #' @examples
 #' \dontrun{
@@ -21,22 +21,22 @@
 #'   data = smokingcessation, sm = "OR")
 #' net1 <- netmeta(p1, random = FALSE)
 #' 
-#' # Use P-scores to calculate local SIR for treatments "A" and "C"
-#' subset(sir(net1), subset = c("A", "C"))
+#' # Use P-scores to calculate local POTH for treatments "A" and "C"
+#' subset(poth(net1), subset = c("A", "C"))
 #' 
-#' # Use P-scores to calculate local SIR for first three treatments
-#' subset(sir(net1), top = 3)
+#' # Use P-scores to calculate local POTH for first three treatments
+#' subset(poth(net1), top = 3)
 #' 
-#' # Use P-scores to calculate local SIR for first three treatments
-#' subset(sir(net1), bottom = 3)
+#' # Use P-scores to calculate local POTH for first three treatments
+#' subset(poth(net1), bottom = 3)
 #' }
 #' 
-#' @method subset sir
+#' @method subset poth
 #' @export
 
-subset.sir <- function(x, subset, top, bottom, ...) {
+subset.poth <- function(x, subset, top, bottom, ...) {
   
-  chkclass(x, "sir")
+  chkclass(x, "poth")
   
   if (x$input == "mcmc.samples") {
     score_type <- "SUCRA"
@@ -65,7 +65,7 @@ subset.sir <- function(x, subset, top, bottom, ...) {
     n <- ncol(TE)
   }
   else
-    stop("Local SIR for a subset of treatments not available for input type '",
+    stop("Local POTH for a subset of treatments not available for input type '",
          x$input, "'.")
   
   if (as.numeric(!missing(subset)) +
@@ -99,9 +99,9 @@ subset.sir <- function(x, subset, top, bottom, ...) {
     seq <- seq.top | seq.bottom
   
   if (x$input == "mcmc.samples")
-    return(sir(samples[, seq, drop = FALSE], small.values = small.values))
+    return(poth(samples[, seq, drop = FALSE], small.values = small.values))
   else if (x$input %in% c("effects.se", "netmeta"))
-    return(sir(pscores(TE[seq, seq, drop = FALSE],
+    return(poth(pscores(TE[seq, seq, drop = FALSE],
                        seTE[seq, seq, drop = FALSE],
                        small.values)))
 }

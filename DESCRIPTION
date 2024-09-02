@@ -1,7 +1,7 @@
-Package: sir
-Title: Calculate Separation In Ranking (SIR)
+Package: poth
+Title: Precision Of Treatment Hierarchy (POTH)
 Version: 0.2-0
-Date: 2024-05-14
+Date: 2024-09-02
 Imports: ggplot2, stringr
 Suggests: netmeta
 Authors@R: c(person("Augustine", "Wigle",
@@ -15,10 +15,9 @@ Authors@R: c(person("Augustine", "Wigle",
 Author: Augustine Wigle [cre, aut] (<https://orcid.org/0000-0003-0225-1949>),
   Guido Schwarzer [aut] (<https://orcid.org/0000-0001-6214-9087>)
 Maintainer: Augustine Wigle <amhwigle@uwaterloo.ca>
-Description: Calculate SIR and leave-one-out SIR for frequentist NMA.
-URL: https://github.com/augustinewigle/sir
-BugReports: https://github.com/augustinewigle/sir/issues
-#License: What license is it under?
+Description: Calculate POTH and leave-one-out POTH for frequentist network meta-analysis.
+URL: https://github.com/augustinewigle/poth
+BugReports: https://github.com/augustinewigle/poth/issues
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true

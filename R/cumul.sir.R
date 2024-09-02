@@ -1,21 +1,19 @@
-#' Cumulative method for separation in ranking (SIR) metric
+#' Cumulative method for precision of treatment hierarchy (POTH) metric
 #'
-#' @param x An R object of class \code{sir}.
+#' @param x An R object of class \code{poth}.
 #' @param sort A logical indicating whether results should be sorted
 #'   by decreasing ranking metric.
-#' @param digits Minimal number of significant digits, see
-#'   \code{\link{print.default}}.
 #' @param \dots Additional arguments.
 #'
-#' @return A vector of sir values for the top 2 to n treatments with additional class \code{cumul.sir}
+#' @return A vector of POTH values for the top 2 to n treatments with additional class \code{cumul.poth}
 #'
 #' @rdname cumul
-#' @method cumul sir
+#' @method cumul poth
 #' @export
 
-cumul.sir <- function(x, sort = TRUE, ...) {
+cumul.poth <- function(x, sort = TRUE, ...) {
 
-  chkclass(x, "sir")
+  chkclass(x, "poth")
 
   n <- x$n
   trts <- x$trts
@@ -37,7 +35,7 @@ cumul.sir <- function(x, sort = TRUE, ...) {
                rankMCMC(samples[, seq[1:x]], small.values))
 
     #
-    cum_sirs <- sapply(cum_rps, function(x) sir(x)$sir)
+    cum_poths <- sapply(cum_rps, function(x) poth(x)$poth)
   }
   else if (x$input %in% c("effects.se", "netmeta")) {
     score_type <- "P-score"
@@ -62,28 +60,28 @@ cumul.sir <- function(x, sort = TRUE, ...) {
              function(x)
                pscores(TE[seq[1:x], seq[1:x]], seTE[seq[1:x], seq[1:x]], small.values))
     #
-    cum_sirs <- sapply(cum_pscores, function(x) sir(x)$sir)
+    cum_poths <- sapply(cum_pscores, function(x) poth(x)$poth)
 
   }
   else
     stop("Leave-one-out method not available for input type '", x$input, "'.")
 
-  names(cum_sirs) <- paste0("top ",2:n)
+  names(cum_poths) <- paste0("top ",2:n)
 
-  res <- cum_sirs
+  res <- cum_poths
 
   grps <- sapply(2:n, function(x) paste(trts[seq[1:x]], collapse = ", "))
 
-  res <- list(cumul.sir = cum_sirs,
+  res <- list(cumul.poth = cum_poths,
               groups = grps,
               ranking = x$ranking,
-              sir = x$sir)
+              poth = x$poth)
 
   # attr(res, "score_type") <- score_type
   # attr(res, "ranking") <- x$ranking
   # attr(res, "groups") <- grps
   #
-  class(res) <- c("cumul.sir", class(res))
+  class(res) <- c("cumul.poth", class(res))
   #
 
   return(res)

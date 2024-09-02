@@ -1,17 +1,17 @@
 #' Plot results of leave-one-out method
 #'
 #' @description
-#' Plot results of leave-one-out method for separation in ranking (SIR) metric
+#' Plot results of leave-one-out method for precision of treatment hierarchy (POTH) metric
 #'
-#' @param x R object of class \code{sir}.
+#' @param x R object of class \code{poth}.
 #' @param labels A logical indicating whether treatment names should be
 #'   shown in the plot.
-#' @param digits Minimal number of significant digits for global SIR, see
+#' @param digits Minimal number of significant digits for global POTH, see
 #'   \code{\link{print.default}}.
 #' @param \dots Additional arguments (ignored).
 #'
 #' @details
-#' Plot results of leave-one-out method for separation in ranking (SIR) metric
+#' Plot results of leave-one-out method for precision of treatment hierarchy (POTH) metric
 #' (Wigle et al., 2024).
 #'
 #' @return
@@ -36,7 +36,7 @@
 #' net1 <- netmeta(p1, random = FALSE)
 #'
 #' # Leave-one-out method
-#' loo1 <- loo(sir(net1))
+#' loo1 <- loo(poth(net1))
 #' loo1
 #' plot(loo1)
 #'
@@ -45,20 +45,20 @@
 #'                 data = Senn2013, sm = "MD", random = FALSE)
 #'
 #' # Leave-one-out method (without sorting by ranking metric)
-#' loo2 <- loo(sir(net2), sort = FALSE)
+#' loo2 <- loo(poth(net2), sort = FALSE)
 #' loo2
 #' plot(loo2)
 #' }
 #'
-#' @method plot loo.sir
+#' @method plot loo.poth
 #' @export
 
-plot.loo.sir <- function(x, labels = TRUE, digits = 3, ...) {
+plot.loo.poth <- function(x, labels = TRUE, digits = 3, ...) {
 
-  chkclass(x, "loo.sir")
+  chkclass(x, "loo.poth")
 
   res_pos <- x$residuals > 0
-  sir <- attr(x, "sir")
+  poth <- attr(x, "poth")
   score_type <- attr(x, "score_type")
 
   # Get rid of warning "no visible binding for global variable"
@@ -77,7 +77,7 @@ plot.loo.sir <- function(x, labels = TRUE, digits = 3, ...) {
     labs(y = expression(r["POTH"]~"(j)"),
          x = paste0("Place in Hierarchy"),
          fill = str_wrap(paste0("Contribution to POTH (",
-                                formatPT(sir, digits = digits, lab = TRUE,
+                                formatPT(poth, digits = digits, lab = TRUE,
                                          labval = "POTH"),
                                 ")"), width = 20)) +
     guides(alpha = "none") +

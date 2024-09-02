@@ -1,16 +1,16 @@
-#' Leave-one-out method for separation in ranking (SIR) metric
+#' Leave-one-out method for precision of treatment hierarchy (POTH) metric
 #'
-#' @param x An R object of class \code{sir}.
+#' @param x An R object of class \code{poth}.
 #' @param digits Minimal number of significant digits, see
 #'   \code{\link{print.default}}.
 #' @param \dots Additional arguments.
 #'
-#' @return A data frame with additional class \code{loo.sir} and the following
+#' @return A data frame with additional class \code{loo.poth} and the following
 #'   variables:
 #' \item{trt}{Treatment names.}
 #' \item{score}{Ranking metric (global).}
 #' \item{rank}{Treatment rank (global).}
-#' \item{residual}{Residual (global SIR minus leave-one-out SIR.}
+#' \item{residual}{Residual (global POTH minus leave-one-out POTH.}
 #' \item{ratio}{Ratio of residual devided by absolute sum of residuals.}
 #'
 #' @examples
@@ -24,7 +24,7 @@
 #' net1 <- netmeta(p1, random = FALSE)
 #'
 #' # Leave-one-out method
-#' loo1 <- loo(sir(net1))
+#' loo1 <- loo(poth(net1))
 #' loo1
 #'
 #' data(Senn2013)
@@ -34,12 +34,12 @@
 #' }
 #'
 #' @rdname loo
-#' @method loo sir
+#' @method loo poth
 #' @export
 
-loo.sir <- function(x, ...) {
+loo.poth <- function(x, ...) {
 
-  chkclass(x, "sir")
+  chkclass(x, "poth")
 
   n <- x$n
   trts <- x$trts
@@ -62,8 +62,8 @@ loo.sir <- function(x, ...) {
              function(x)
                rankMCMC(samples[, -x], small.values))
     #
-    loo_sirs <- sapply(loo_rps, function(x) sir(x)$sir)
-    names(loo_sirs) <- colnames(samples)
+    loo_poths <- sapply(loo_rps, function(x) poth(x)$poth)
+    names(loo_poths) <- colnames(samples)
   }
   else if (x$input %in% c("effects.se", "netmeta")) {
     score_type <- "P-score"
@@ -92,15 +92,15 @@ loo.sir <- function(x, ...) {
                pscores(TE[-drp, -drp], seTE[-drp, -drp], small.values))
     names(loo_pscores) <- colnames(TE)
     #
-    loo_sirs <- sapply(loo_pscores, function(x) sir(x)$sir)
-    names(loo_sirs) <- names(loo_pscores)
+    loo_poths <- sapply(loo_pscores, function(x) poth(x)$poth)
+    names(loo_poths) <- names(loo_pscores)
   }
   else
     stop("Leave-one-out method not available for input type '", x$input, "'.")
 
   # Put everything together
   #
-  residuals <- x$sir - loo_sirs
+  residuals <- x$poth - loo_poths
   #
 
   res <- data.frame(trt = names(residuals),
@@ -109,10 +109,10 @@ loo.sir <- function(x, ...) {
                     residuals = residuals,
                     ratio = residuals / sum(abs(residuals)))[seq, ]
   #
-  attr(res, "sir") <- x$sir
+  attr(res, "poth") <- x$poth
   attr(res, "score_type") <- score_type
   #
-  class(res) <- c("loo.sir", class(res))
+  class(res) <- c("loo.poth", class(res))
   #
   res
 }
@@ -127,14 +127,14 @@ loo <- function(x, ...)
 
 #' @rdname loo
 #' @keywords print
-#' @method print loo.sir
+#' @method print loo.poth
 #' @export
 
-print.loo.sir <- function(x, digits = 3, ...) {
+print.loo.poth <- function(x, digits = 3, ...) {
 
-  chkclass(x, "loo.sir")
+  chkclass(x, "loo.poth")
   #
-  sir <- attr(x, "sir")
+  poth <- attr(x, "poth")
   score_type <- attr(x, "score_type")
   #
   rownames(x) <- x$trt

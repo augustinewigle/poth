@@ -1,7 +1,7 @@
-#' Calculate separation in ranking (SIR) metric
+#' Calculate precision of treatment hierarchy (POTH) metric
 #'
 #' @description
-#' Separation in ranking (SIR) is a metric to quantify the uncertainty in
+#' precision of treatment hierarchy (POTH) is a metric to quantify the uncertainty in
 #' a treatment hierarchy in network meta-analysis
 #'
 #' @param x Mandatory argument with suitable information on the treatment
@@ -19,11 +19,11 @@
 #'   by decreasing ranking metric.
 #' @param digits Minimal number of significant digits, see
 #'   \code{\link{print.default}}.
-#' @param object An object of class \code{summary.sir}.
+#' @param object An object of class \code{summary.poth}.
 #' @param \dots Additional arguments (ignored).
 #'
 #' @details
-#' This function calculates the separation in ranking (SIR) metric to quantify
+#' This function calculates the precision of treatment hierarchy (POTH) metric to quantify
 #' the uncertainty in a treatment hierarchy in network meta-analysis
 #' (Wigle et al., 2024).
 #'
@@ -53,9 +53,9 @@
 #' \code{\link[netmeta]{netrank}}, and \code{\link[netmeta]{rankogram}} objects.
 #'
 #' @return
-#' An object of class \code{sir} with corresponding \code{print}
+#' An object of class \code{poth} with corresponding \code{print}
 #' function. The object is a list containing the following components:
-#' \item{sir}{Separation in ranking metric.}
+#' \item{poth}{Separation in ranking metric.}
 #' \item{ranking}{A named numeric vector with rankings, i.e.,
 #'   SUCRAs or P-scores.}
 #' \item{ranking.matrix}{A square matrix with the probabilities
@@ -85,32 +85,32 @@
 #' rg1 <- rankogram(net1)
 #' rg1
 #'
-#' # Calculate SIR
-#' s1 <- sir(rg1)
+#' # Calculate POTH
+#' s1 <- poth(rg1)
 #' s1
 #'
 #' # Also print probabilities for each possible rank
 #' summary(s1)
 #'
-#' # Use SUCRAs to calculate SIR
+#' # Use SUCRAs to calculate POTH
 #' nr1 <- netrank(rg1)
 #' nr1
-#' sir(nr1)
-#' sir(nr1$ranking.common)
+#' poth(nr1)
+#' poth(nr1$ranking.common)
 #'
 #' data(Senn2013)
 #' net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
 #'                 data = Senn2013, sm = "MD", random = FALSE)
 #'
-#' # Use P-scores to calculate SIR
+#' # Use P-scores to calculate POTH
 #' nr2 <- netrank(net2)
 #' nr2
-#' sir(nr2)
+#' poth(nr2)
 #' }
 #'
-#' @export sir
+#' @export poth
 
-sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
+poth <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
 
   #
   # Set arguments
@@ -132,7 +132,7 @@ sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
     pooled <- ""
 
   #
-  # Calculate SIR
+  # Calculate POTH
   #
 
   if ((is.matrix(x) & !missing(se)) || inherits(x, "netmeta")) {
@@ -167,7 +167,7 @@ sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
     n <- ncol(TE)
     ranking <- pscores(TE, se, small.values, trts)
     #
-    sir <-
+    poth <-
       3 * ((1 - n) / (n + 1) + 4 * (n - 1) / (n * (n + 1)) * sum(ranking^2))
   }
   else if ((is.matrix(x) | is.data.frame(x)) & missing(se)) {
@@ -205,7 +205,7 @@ sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
     #
     ranking <- (n - rank_e) / (n - 1)
     #
-    sir <- 1 - sum(rank_vars) * 12 / n / (n + 1) / (n - 1)
+    poth <- 1 - sum(rank_vars) * 12 / n / (n + 1) / (n - 1)
   }
   else if ((is.vector(x) & !is.list(x)) ||
            inherits(x, c("netrank", "rankogram"))) {
@@ -256,7 +256,7 @@ sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
       trts <- NULL
     }
     #
-    sir <-
+    poth <-
       3 * ((1 - n) / (n + 1) + 4 * (n - 1) / (n * (n + 1)) * sum(ranking^2))
   }
   else
@@ -283,7 +283,7 @@ sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
   else
     trts <- names(ranking)
 
-  res <- list(sir = sir, ranking = ranking, ranking.matrix = ranking.matrix,
+  res <- list(poth = poth, ranking = ranking, ranking.matrix = ranking.matrix,
               small.values = small.values, pooled = pooled,
               n = n,
               x = x, se = se, input = input, trts = trts)
@@ -291,20 +291,20 @@ sir <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
   if (inherits(x, "netmeta"))
     res$TE <- TE
   #
-  class(res) <- "sir"
+  class(res) <- "poth"
   #
   res
 }
 
 
-#' @rdname sir
+#' @rdname poth
 #' @keywords print
-#' @method print sir
+#' @method print poth
 #' @export
 
-print.sir <- function(x, sort = TRUE, digits = 3, ...) {
+print.poth <- function(x, sort = TRUE, digits = 3, ...) {
 
-  chkclass(x, "sir")
+  chkclass(x, "poth")
 
   class(x) <- "list"
   #
@@ -313,7 +313,7 @@ print.sir <- function(x, sort = TRUE, digits = 3, ...) {
   else
     seq <- seq_along(x$ranking)
   #
-  x$sir <- round(x$sir, digits)
+  x$poth <- round(x$poth, digits)
   x$ranking <- round(x$ranking[seq], digits)
   #
   x$ranking.matrix <- x$x <- x$se <- x$n <- x$input <- x$trts <-
@@ -327,26 +327,26 @@ print.sir <- function(x, sort = TRUE, digits = 3, ...) {
   invisible(NULL)
 }
 
-#' @rdname sir
+#' @rdname poth
 #' @keywords summary
-#' @method summary sir
+#' @method summary poth
 #' @export
 
-summary.sir <- function(object, ...) {
+summary.poth <- function(object, ...) {
   res <- object
-  class(res) <- "summary.sir"
+  class(res) <- "summary.poth"
   res
 }
 
 
-#' @rdname sir
+#' @rdname poth
 #' @keywords print
-#' @method print summary.sir
+#' @method print summary.poth
 #' @export
 
-print.summary.sir <- function(x, sort = TRUE, digits = 3, ...) {
+print.summary.poth <- function(x, sort = TRUE, digits = 3, ...) {
 
-  chkclass(x, "summary.sir")
+  chkclass(x, "summary.poth")
 
   class(x) <- "list"
   #
@@ -355,7 +355,7 @@ print.summary.sir <- function(x, sort = TRUE, digits = 3, ...) {
   else
     seq <- seq_along(x$ranking)
   #
-  x$sir <- round(x$sir, digits)
+  x$poth <- round(x$poth, digits)
   x$ranking <- round(x$ranking[seq], digits)
   #
   if (!is.null(x$ranking.matrix))
