@@ -1,4 +1,4 @@
-# poth: Calculate Separation In Ranking (POTH)
+# poth: Calculate Precision of Treatment Hierarchy (POTH)
 Official Git repository of R package **poth**
 
 [![CRAN Version](http://www.r-pkg.org/badges/version/poth)](https://cran.r-project.org/package=poth)
@@ -8,7 +8,7 @@ Official Git repository of R package **poth**
 
 ## Description
 
-The poth package allows to calculate POTH and leave-one-out POTH for frequentist
+The poth package allows to calculate POTH, subset POTH, POTH residuals, and cumulative POTH for frequentist and Bayesian
 network meta-analysis.
 
 
