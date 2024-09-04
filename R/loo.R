@@ -3,14 +3,17 @@
 #' @param x An R object of class \code{poth}.
 #' @param digits Minimal number of significant digits, see
 #'   \code{\link{print.default}}.
+#' @param legend A logical indicating whether a legend should be
+#'   printed.
 #' @param \dots Additional arguments.
 #'
 #' @return A data frame with additional class \code{loo.poth} and the following
 #'   variables:
 #' \item{trt}{Treatment names.}
-#' \item{score}{Ranking metric (global).}
 #' \item{rank}{Treatment rank (global).}
-#' \item{residual}{Residual (global POTH minus leave-one-out POTH.}
+#' \item{score}{Ranking metric (global).}
+#' \item{poth_loo}{Leave-one-out POTH.}
+#' \item{resid}{Residuals (global POTH minus leave-one-out POTH.}
 #' \item{ratio}{Ratio of residual devided by absolute sum of residuals.}
 #'
 #' @examples
@@ -62,8 +65,8 @@ loo.poth <- function(x, ...) {
              function(x)
                rankMCMC(samples[, -x], small.values))
     #
-    loo_poths <- sapply(loo_rps, function(x) poth(x)$poth)
-    names(loo_poths) <- colnames(samples)
+    poth_loo <- sapply(loo_rps, function(x) poth(x)$poth)
+    names(poth_loo) <- colnames(samples)
   }
   else if (x$input %in% c("effects.se", "netmeta")) {
     score_type <- "P-score"
@@ -92,25 +95,27 @@ loo.poth <- function(x, ...) {
                pscores(TE[-drp, -drp], seTE[-drp, -drp], small.values))
     names(loo_pscores) <- colnames(TE)
     #
-    loo_poths <- sapply(loo_pscores, function(x) poth(x)$poth)
-    names(loo_poths) <- names(loo_pscores)
+    poth_loo <- sapply(loo_pscores, function(x) poth(x)$poth)
+    names(poth_loo) <- names(loo_pscores)
   }
   else
     stop("Leave-one-out method not available for input type '", x$input, "'.")
 
   # Put everything together
   #
-  residuals <- x$poth - loo_poths
+  resid <- x$poth - poth_loo
   #
 
-  res <- data.frame(trt = names(residuals),
+  res <- data.frame(trt = names(resid),
                     rank = rank(-ranking),
                     score = ranking,
-                    residuals = residuals,
-                    ratio = residuals / sum(abs(residuals)))[seq, ]
+                    poth_loo = poth_loo,
+                    resid = resid,
+                    ratio = resid / sum(abs(resid)))[seq, ]
   #
   attr(res, "poth") <- x$poth
   attr(res, "score_type") <- score_type
+  attr(res, "pooled") <- x$pooled
   #
   class(res) <- c("loo.poth", class(res))
   #
@@ -130,23 +135,52 @@ loo <- function(x, ...)
 #' @method print loo.poth
 #' @export
 
-print.loo.poth <- function(x, digits = 3, ...) {
+print.loo.poth <- function(x, digits = 3, legend = TRUE, ...) {
 
   chkclass(x, "loo.poth")
   #
-  poth <- attr(x, "poth")
-  score_type <- attr(x, "score_type")
+  chknumeric(digits, min = 0, length = 1)
+  chklogical(legend)
   #
+  poth <-attr(x, "poth")
+  score_type <- attr(x, "score_type")
+  pooled <- attr(x, "pooled")
+  
+  txt <- "Leave-one-out method"
+  #
+  if (pooled != "")
+    txt <- paste0(txt,
+                  " (",
+                  if (pooled == "common") "common" else "random",
+                  " effects model)")
+  #
+  txt <- paste0(txt, "\n\n")
+  #
+  cat(txt)
+  #
+  cat(paste0("Precision of treatment hierarchy (global POTH) = ",
+             round(poth, digits = digits), "\n\n"))
+  
   rownames(x) <- x$trt
   x$trt <- NULL
   #
   x$score <- round(x$score, digits)
-  x$residuals <- round(x$residuals, digits)
+  x$poth_loo <- round(x$poth_loo, digits)
+  x$resid <- round(x$resid, digits)
   x$ratio <- round(x$ratio, digits)
   #
   class(x) <- "data.frame"
   #
   print(x)
-  #
+  
+  if (legend) {
+    cat("\nLegend:\n")
+    cat(" rank     - Treatment rank (global)\n")
+    cat(" score    - Ranking metric (global)\n")
+    cat(" poth_loo - Leave-one-out POTH\n")
+    cat(" resid    - Residual (global POTH minus leave-one-out POTH)\n")
+    cat(" ratio    - Ratio of residual devided by absolute sum of residuals\n")
+  }
+  
   invisible(NULL)
 }

@@ -10,7 +10,7 @@
 
 loo(x, ...)
 
-\method{print}{loo.poth}(x, digits = 3, ...)
+\method{print}{loo.poth}(x, digits = 3, legend = TRUE, ...)
 }
 \arguments{
 \item{x}{An R object of class \code{poth}.}
@@ -19,14 +19,18 @@ loo(x, ...)
 
 \item{digits}{Minimal number of significant digits, see
 \code{\link{print.default}}.}
+
+\item{legend}{A logical indicating whether a legend should be
+printed.}
 }
 \value{
 A data frame with additional class \code{loo.poth} and the following
   variables:
 \item{trt}{Treatment names.}
-\item{score}{Ranking metric (global).}
 \item{rank}{Treatment rank (global).}
-\item{residual}{Residual (global POTH minus leave-one-out POTH.}
+\item{score}{Ranking metric (global).}
+\item{poth_loo}{Leave-one-out POTH.}
+\item{resid}{Residuals (global POTH minus leave-one-out POTH.}
 \item{ratio}{Ratio of residual devided by absolute sum of residuals.}
 }
 \description{

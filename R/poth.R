@@ -303,9 +303,9 @@ poth <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) 
 #' @export
 
 print.poth <- function(x, sort = TRUE, digits = 3, ...) {
-
+  
   chkclass(x, "poth")
-
+  
   class(x) <- "list"
   #
   if (sort)
@@ -315,17 +315,27 @@ print.poth <- function(x, sort = TRUE, digits = 3, ...) {
   #
   x$poth <- round(x$poth, digits)
   x$ranking <- round(x$ranking[seq], digits)
+  
+  txt <- "Precision of treatment hierarchy (POTH)"
   #
-  x$ranking.matrix <- x$x <- x$se <- x$n <- x$input <- x$trts <-
-    x$TE <- x$small.values <- NULL
+  if (x$pooled != "")
+    txt <- paste0(txt,
+                  " based on ",
+                  if (x$pooled == "common") "common" else "random",
+                  " effects model")
   #
-  if (x$pooled == "")
-    x$pooled <- NULL
+  txt <- paste0(txt, "\n\n")
   #
-  print(x)
+  cat(txt)
   #
+  cat(paste0("POTH = ", x$poth, "\n\n"))
+  #
+  cat("Ranking:\n")
+  print(x$ranking)
+  
   invisible(NULL)
 }
+
 
 #' @rdname poth
 #' @keywords summary
@@ -345,11 +355,9 @@ summary.poth <- function(object, ...) {
 #' @export
 
 print.summary.poth <- function(x, sort = TRUE, digits = 3, ...) {
-
+  
   chkclass(x, "summary.poth")
-
-  class(x) <- "list"
-  #
+    
   if (sort)
     seq <- rev(order(x$ranking))
   else
@@ -360,13 +368,28 @@ print.summary.poth <- function(x, sort = TRUE, digits = 3, ...) {
   #
   if (!is.null(x$ranking.matrix))
     x$ranking.matrix <- round(x$ranking.matrix[seq, ], digits)
+  
+  txt <- "Precision of treatment hierarchy (POTH)"
   #
-  if (x$pooled == "")
-    x$pooled <- NULL
+  if (x$pooled != "")
+    txt <- paste0(txt,
+                  " based on ",
+                  if (x$pooled == "common") "common" else "random",
+                  " effects model")
   #
-  x$x <- x$se <- x$n <- x$input <- x$trts <- x$small.values <- NULL
+  txt <- paste0(txt, "\n\n")
   #
-  print(x)
+  cat(txt)
   #
+  cat(paste0("POTH = ", x$poth, "\n\n"))
+  #
+  cat("Ranking:\n")
+  print(x$ranking)
+  #
+  if (!is.null(x$ranking.matrix)) {
+    cat("Ranking matrix:\n")
+    print(x$ranking.matrix)
+  }
+  
   invisible(NULL)
 }

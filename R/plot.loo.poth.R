@@ -54,23 +54,23 @@
 #' @export
 
 plot.loo.poth <- function(x, labels = TRUE, digits = 3, ...) {
-
+  
   chkclass(x, "loo.poth")
-
-  res_pos <- x$residuals > 0
+  
+  res_pos <- x$resid > 0
   poth <- attr(x, "poth")
   score_type <- attr(x, "score_type")
 
   # Get rid of warning "no visible binding for global variable"
 
-  n <- residuals <- score_type <- NULL
+  n <- resid <- score_type <- NULL
   n.seq <- seq_len(nrow(x))
 
   g <- ggplot(x,
-              aes(x = n.seq, y = residuals,
-                  fill = res_pos, alpha = abs(residuals))) +
+              aes(x = n.seq, y = resid,
+                  fill = res_pos, alpha = abs(resid))) +
     geom_col(col = "black") +
-    coord_cartesian(ylim = c(-max(abs(x$residuals)), max(abs(x$residuals)))) +
+    coord_cartesian(ylim = c(-max(abs(x$resid)), max(abs(x$resid)))) +
     geom_hline(yintercept = 0) +
     scale_fill_manual(breaks = c(FALSE, TRUE), values = c("red4", "darkgreen"),
                       labels = c("Reduces certainty", "Increases certainty")) +

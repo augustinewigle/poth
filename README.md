@@ -1,9 +1,16 @@
 # poth: Calculate Precision of Treatment Hierarchy (POTH)
 Official Git repository of R package **poth**
 
-[![CRAN Version](http://www.r-pkg.org/badges/version/poth)](https://cran.r-project.org/package=poth)
-[![Monthly Downloads](http://cranlogs.r-pkg.org/badges/poth)](http://cranlogs.r-pkg.org/badges/poth)
-[![Total Downloads](http://cranlogs.r-pkg.org/badges/grand-total/poth)](http://cranlogs.r-pkg.org/badges/grand-total/poth)
+[![License: GPL (>=2)](https://img.shields.io/badge/license-GPL-blue)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+[![CRAN Version](https://www.r-pkg.org/badges/version/poth)](https://cran.r-project.org/package=poth)
+[![Monthly Downloads](https://cranlogs.r-pkg.org/badges/poth)](https://cranlogs.r-pkg.org/badges/poth)
+[![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/poth)](https://cranlogs.r-pkg.org/badges/grand-total/poth)
+
+
+## Authors
+
+[Augustine Wigle](https://orcid.org/0000-0003-0225-1949),
+[Guido Schwarzer](https://orcid.org/0000-0001-6214-9087)
 
 
 ## Description
@@ -14,7 +21,7 @@ network meta-analysis.
 
 ## Installation
 
-### Current official [![CRAN Version](http://www.r-pkg.org/badges/version/poth)](https://cran.r-project.org/package=poth) release:
+### Current official [![CRAN Version](https://www.r-pkg.org/badges/version/poth)](https://cran.r-project.org/package=poth) release:
 ```r
 install.packages("poth")
 ```

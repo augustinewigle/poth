@@ -40,8 +40,11 @@ subset.poth <- function(x, subset, top, bottom, ...) {
   
   if (x$input == "mcmc.samples") {
     score_type <- "SUCRA"
+    #
     scores <- x$ranking
+    #
     samples <- x$x
+    #
     trts <- x$trts
     small.values <- x$small.values
     n <- ncol(samples)
@@ -98,10 +101,22 @@ subset.poth <- function(x, subset, top, bottom, ...) {
   if (!missing(top) & !missing(bottom))
     seq <- seq.top | seq.bottom
   
-  if (x$input == "mcmc.samples")
-    return(poth(samples[, seq, drop = FALSE], small.values = small.values))
-  else if (x$input %in% c("effects.se", "netmeta"))
-    return(poth(pscores(TE[seq, seq, drop = FALSE],
-                       seTE[seq, seq, drop = FALSE],
-                       small.values)))
+  if (x$input == "mcmc.samples") {
+    if (x$pooled != "")
+      return(poth(samples[, seq, drop = FALSE], small.values = small.values,
+                  pooled = x$pooled))
+    else
+      return(poth(samples[, seq, drop = FALSE], small.values = small.values))
+  }
+  else if (x$input %in% c("effects.se", "netmeta")) {
+    if (x$pooled != "")
+      return(poth(pscores(TE[seq, seq, drop = FALSE],
+                          seTE[seq, seq, drop = FALSE],
+                          small.values = small.values),
+                  pooled = x$pooled))
+    else
+      return(poth(pscores(TE[seq, seq, drop = FALSE],
+                          seTE[seq, seq, drop = FALSE],
+                          small.values = small.values)))
+  }
 }
