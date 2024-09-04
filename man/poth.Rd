@@ -88,7 +88,6 @@ Argument \code{trts} is ignored for \code{\link[netmeta]{netmeta}},
 }
 \examples{
 \dontrun{
-# R package netmeta must be available
 library("netmeta")
 data(smokingcessation)
 p1 <- pairwise(list(treat1, treat2, treat3),

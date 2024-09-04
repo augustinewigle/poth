@@ -38,7 +38,6 @@ Leave-one-out method for precision of treatment hierarchy (POTH) metric
 }
 \examples{
 \dontrun{
-# R package netmeta must be available
 library("netmeta")
 data(smokingcessation)
 p1 <- pairwise(list(treat1, treat2, treat3),

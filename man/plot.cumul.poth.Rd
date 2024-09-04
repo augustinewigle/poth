@@ -2,19 +2,19 @@
 % Please edit documentation in R/plot.cumul.poth.R
 \name{plot.cumul.poth}
 \alias{plot.cumul.poth}
-\title{Plot results of leave-one-out method}
+\title{Plot cumulative precision of treatment hierarchy (POTH) values}
 \usage{
-\method{plot}{cumul.poth}(x, labels = FALSE, trt.trunc = 3, digits = 3, ...)
+\method{plot}{cumul.poth}(x, labels = FALSE, nchar.trts = 4, digits = 3, ...)
 }
 \arguments{
-\item{x}{R object of class \code{poth}.}
+\item{x}{R object of class \code{cumul.poth}.}
 
 \item{labels}{A logical indicating whether treatment names should be
 shown in the plot.}
 
-\item{trt.trunc}{Number of characters to keep for each treatment name if labels = T}
+\item{nchar.trts}{Number of characters to keep for each treatment name if labels = TRUE.}
 
-\item{digits}{Minimal number of significant digits for global POTH, see
+\item{digits}{Minimal number of significant digits for cumulative POTH, see
 \code{\link{print.default}}.}
 
 \item{\dots}{Additional arguments (ignored).}
@@ -23,11 +23,31 @@ shown in the plot.}
 A ggplot2 object.
 }
 \description{
-Plot results of cumulative method for precision of treatment hierarchy (POTH) metric
+Plot cumulative precision of treatment hierarchy (POTH) values
 }
 \details{
 Plot results of cumulative method for precision of treatment hierarchy (POTH) metric
 (Wigle et al., 2024).
+}
+\examples{
+\dontrun{
+library("netmeta")
+data(Senn2013)
+net1 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
+  data = Senn2013, sm = "MD", random = FALSE)
+
+# Cumulative method
+c1 <- cumul(poth(net1))
+c1
+plot(c1)
+plot(c1, labels = TRUE)
+
+c2 <- cumul(poth(net1), sort = FALSE)
+c2
+plot(c2)
+plot(c2, labels = TRUE)
+}
+
 }
 \references{
 Wigle A, ... (2024):

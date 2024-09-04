@@ -35,6 +35,7 @@
 #' @import ggplot2
 #' @importFrom stringr str_wrap str_trunc
 #' @importFrom stats pnorm
+#' @importFrom netmeta treats
 
 "_PACKAGE"
 

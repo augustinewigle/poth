@@ -1,13 +1,13 @@
-#' Plot results of leave-one-out method
+#' Plot cumulative precision of treatment hierarchy (POTH) values
 #'
 #' @description
-#' Plot results of cumulative method for precision of treatment hierarchy (POTH) metric
+#' Plot cumulative precision of treatment hierarchy (POTH) values
 #'
-#' @param x R object of class \code{poth}.
+#' @param x R object of class \code{cumul.poth}.
 #' @param labels A logical indicating whether treatment names should be
 #'   shown in the plot.
-#' @param trt.trunc Number of characters to keep for each treatment name if labels = T
-#' @param digits Minimal number of significant digits for global POTH, see
+#' @param nchar.trts Number of characters to keep for each treatment name if labels = TRUE.
+#' @param digits Minimal number of significant digits for cumulative POTH, see
 #'   \code{\link{print.default}}.
 #' @param \dots Additional arguments (ignored).
 #'
@@ -26,64 +26,64 @@
 #' Separation In Ranking: A Metric for Quantifying Uncertainty in Treatment
 #' Hierarchies in Network Meta-Analysis
 #'
+#' @examples
+#' \dontrun{
+#' library("netmeta")
+#' data(Senn2013)
+#' net1 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
+#'   data = Senn2013, sm = "MD", random = FALSE)
+#'
+#' # Cumulative method
+#' c1 <- cumul(poth(net1))
+#' c1
+#' plot(c1)
+#' plot(c1, labels = TRUE)
+#' 
+#' c2 <- cumul(poth(net1), sort = FALSE)
+#' c2
+#' plot(c2)
+#' plot(c2, labels = TRUE)
+#' }
+#'
 #' @method plot cumul.poth
 #' @export
 
-plot.cumul.poth <- function(x, labels = FALSE, trt.trunc = 3, digits = 3, ...) {
-
+plot.cumul.poth <- function(x, labels = FALSE, nchar.trts = 4, digits = 3, ...) {
+  
   chkclass(x, "cumul.poth")
-
-  df <- data.frame(poth = x$cumul.poth,
-                   grp = 2:(length(x$groups)+1))
-
-  if(labels) {
-
+  chknumeric(nchar.trts, min = 1, length = 1)
+  
+  poth_cum <- x$poth_cum[-1]
+  df <- data.frame(poth = poth_cum, id = seq_along(poth_cum) + 1,
+                   trt = x$trt[-1])
+  #
+  if (labels) {
+    trts.abbr <- treats(x$trt, nchar.trts)
+    df$labels <- paste("+", trts.abbr[-1])
+    df$labels[1] <- paste(trts.abbr[1], df$labels[1])
+    df$labels <- factor(df$labels, levels = df$labels)
+    #
     xlab <- "Treatments"
-
-    if(trt.trunc > 0) {
-
-      short <- str_trunc(names(x$ranking), width = trt.trunc, ellipsis = "")
-      ordered_short <- short[order(x$ranking, decreasing = TRUE)]
-      labs <- sapply(2:(length(df$poth)+1), function(x) paste(ordered_short[1:x], collapse = ", "))
-      df$labels = str_wrap(labs, width = 10)
-
-
-    } else {
-
-      ordered <- names(x$ranking)[order(x$ranking, decreasing = TRUE)]
-      labs <- sapply(2:(length(df$poth)+1), function(x) paste(ordered[1:x], collapse = ", "))
-      df$labels = str_wrap(labs, width = 10)
-
-
-    }
-
-    p <- ggplot(df, aes(x = labels, y = poth)) +
-      geom_col(col = "black") +
-      geom_hline(yintercept = 0) +
-      scale_y_continuous(limits = c(0,1)) +
-      theme_bw() +
-      theme(legend.position = "none") +
-      labs(x = xlab, y = "cPOTH")
-
-  } else {
-
-    xlab <- "Best k Treatments"
-
-    df$labels <- df$grp
-
-    p <- ggplot(df, aes(x = labels, y = poth)) +
-      geom_col(col = "black") +
-      geom_hline(yintercept = 0) +
-      scale_y_continuous(limits = c(0,1)) +
-      scale_x_continuous(breaks = 2:max(df$grp), minor_breaks = NULL) +
-      theme_bw() +
-      theme(legend.position = "none") +
-      labs(x = xlab, y = "cPOTH")
-
   }
-
-
-
-  return(p)
-
+  else {
+    df$labels <- df$id
+    #
+    if (attr(x, "sort"))
+      xlab <- "Best k Treatments"
+    else
+      xlab <- "Number of treatments"
+  }
+  
+  p <- ggplot(df, aes(x = labels, y = poth)) +
+    geom_col(col = "black") +
+    geom_hline(yintercept = 0) +
+    scale_y_continuous(limits = c(0, 1)) +
+    theme_bw() +
+    theme(legend.position = "none") +
+    labs(x = xlab, y = "cPOTH")
+  #
+  if (!labels)
+    p <- p + scale_x_continuous(breaks = 2:max(df$id), minor_breaks = NULL)
+  
+  p
 }

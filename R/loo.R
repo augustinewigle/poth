@@ -18,7 +18,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' # R package netmeta must be available
 #' library("netmeta")
 #' data(smokingcessation)
 #' p1 <- pairwise(list(treat1, treat2, treat3),
@@ -142,7 +141,7 @@ print.loo.poth <- function(x, digits = 3, legend = TRUE, ...) {
   chknumeric(digits, min = 0, length = 1)
   chklogical(legend)
   #
-  poth <-attr(x, "poth")
+  poth <- attr(x, "poth")
   score_type <- attr(x, "score_type")
   pooled <- attr(x, "pooled")
   

@@ -2,10 +2,13 @@
 % Please edit documentation in R/cumul.poth.R
 \name{cumul.poth}
 \alias{cumul.poth}
+\alias{print.cumul.poth}
 \alias{cumul}
 \title{Cumulative method for precision of treatment hierarchy (POTH) metric}
 \usage{
 \method{cumul}{poth}(x, sort = TRUE, ...)
+
+\method{print}{cumul.poth}(x, digits = 3, legend = TRUE, ...)
 
 cumul(x, ...)
 }
@@ -16,10 +19,42 @@ cumul(x, ...)
 by decreasing ranking metric.}
 
 \item{\dots}{Additional arguments.}
+
+\item{digits}{Minimal number of significant digits, see
+\code{\link{print.default}}.}
+
+\item{legend}{A logical indicating whether a legend should be
+printed.}
 }
 \value{
-A vector of POTH values for the top 2 to n treatments with additional class \code{cumul.poth}
+A data frame with additional class \code{cumul.poth} and the
+  following variables:
+\item{trt}{Name of added treatment.}
+\item{rank}{Treatment rank (global).}
+\item{score}{Ranking metric (global).}
+\item{poth_cum}{Cumulative POTH.}
 }
 \description{
 Cumulative method for precision of treatment hierarchy (POTH) metric
 }
+\examples{
+\dontrun{
+library("netmeta")
+data(Senn2013)
+net1 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
+  data = Senn2013, sm = "MD", random = FALSE)
+
+# Cumulative method
+c1 <- cumul(poth(net1))
+c1
+plot(c1)
+plot(c1, labels = TRUE)
+
+c2 <- cumul(poth(net1), sort = FALSE)
+c2
+plot(c2)
+plot(c2, labels = TRUE)
+}
+
+}
+\keyword{print}
