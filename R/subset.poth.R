@@ -110,13 +110,13 @@ subset.poth <- function(x, subset, top, bottom, ...) {
   }
   else if (x$input %in% c("effects.se", "netmeta")) {
     if (x$pooled != "")
-      return(poth(pscores(TE[seq, seq, drop = FALSE],
-                          seTE[seq, seq, drop = FALSE],
-                          small.values = small.values),
+      return(poth(TE[seq, seq, drop = FALSE],
+                  seTE[seq, seq, drop = FALSE],
+                  small.values = small.values,
                   pooled = x$pooled))
     else
-      return(poth(pscores(TE[seq, seq, drop = FALSE],
-                          seTE[seq, seq, drop = FALSE],
-                          small.values = small.values)))
+      return(poth(TE[seq, seq, drop = FALSE],
+                  seTE[seq, seq, drop = FALSE],
+                  small.values = small.values))
   }
 }
