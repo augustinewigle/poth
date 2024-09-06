@@ -1,7 +1,8 @@
 Package: poth
 Title: Precision Of Treatment Hierarchy (POTH)
 Version: 0.2-0
-Date: 2024-09-04
+Date: 2024-09-06
+Depends: R (>= 3.5.0)
 Imports: ggplot2, stringr, netmeta
 Authors@R: c(person("Augustine", "Wigle",
                     role =  c("aut", "cre"),
@@ -20,4 +21,4 @@ BugReports: https://github.com/augustinewigle/poth/issues
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2

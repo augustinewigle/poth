@@ -7,7 +7,7 @@
 \alias{print.summary.poth}
 \title{Calculate precision of treatment hierarchy (POTH) metric}
 \usage{
-poth(x, se = NULL, small.values = "desirable", pooled, trts = NULL)
+poth(x, se = NULL, small.values, pooled, trts = NULL)
 
 \method{print}{poth}(x, sort = TRUE, digits = 3, ...)
 

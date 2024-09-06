@@ -109,12 +109,19 @@
 #'
 #' @export poth
 
-poth <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) {
+poth <- function(x, se = NULL, small.values, pooled, trts = NULL) {
 
   #
   # Set arguments
   #
 
+  if (missing(small.values)) {
+    if (inherits(x, c("netmeta", "netrank", "rankogram")))
+      small.values <- x$small.values
+    else
+      small.values <- "desirable"
+  }
+  #
   small.values <- setsv(small.values)
   #
   if (!missing(pooled)) {
@@ -129,7 +136,8 @@ poth <- function(x, se = NULL, small.values = "desirable", pooled, trts = NULL) 
   }
   else
     pooled <- ""
-
+  
+  
   #
   # Calculate POTH
   #
