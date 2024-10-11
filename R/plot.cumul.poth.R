@@ -22,8 +22,9 @@
 #'   Guido Schwarzer \email{guido.schwarzer@@uniklinik-freiburg.de}
 #'
 #' @references
-#' Wigle A, ... (2024):
-#' Separation In Ranking: A Metric for Quantifying Uncertainty in Treatment
+#' Wigle, A., Béliveau, A., Salanti, G., Rücker, G., Schwarzer, G., Mavridis, D.,
+#' Nikolakopoulou, A. (2024):
+#' Precision of Treatment Hierarchy: A Metric for Quantifying Uncertainty in Treatment
 #' Hierarchies in Network Meta-Analysis
 #'
 #' @examples
@@ -38,7 +39,7 @@
 #' c1
 #' plot(c1)
 #' plot(c1, labels = TRUE)
-#' 
+#'
 #' c2 <- cumul(poth(net1), sort = FALSE)
 #' c2
 #' plot(c2)
@@ -49,10 +50,10 @@
 #' @export
 
 plot.cumul.poth <- function(x, labels = FALSE, nchar.trts = 4, digits = 3, ...) {
-  
+
   chkclass(x, "cumul.poth")
   chknumeric(nchar.trts, min = 1, length = 1)
-  
+
   poth_cum <- x$poth_cum[-1]
   df <- data.frame(poth = poth_cum, id = seq_along(poth_cum) + 1,
                    trt = x$trt[-1])
@@ -73,7 +74,7 @@ plot.cumul.poth <- function(x, labels = FALSE, nchar.trts = 4, digits = 3, ...) 
     else
       xlab <- "Number of treatments"
   }
-  
+
   p <- ggplot(df, aes(x = labels, y = poth)) +
     geom_col(col = "black") +
     geom_hline(yintercept = 0) +
@@ -84,6 +85,6 @@ plot.cumul.poth <- function(x, labels = FALSE, nchar.trts = 4, digits = 3, ...) 
   #
   if (!labels)
     p <- p + scale_x_continuous(breaks = 2:max(df$id), minor_breaks = NULL)
-  
+
   p
 }

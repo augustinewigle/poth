@@ -16,6 +16,9 @@ harmful (\code{"undesirable"}) effect, can be abbreviated.}
 
 \item{trts}{character vector of treatment names, optional if samples has column names}
 }
+\value{
+A matrix of ranking probabilities where rows are treatments and columns are ranks
+}
 \description{
 Calculate a ranking probabilities matrix from MCMC samples
 }

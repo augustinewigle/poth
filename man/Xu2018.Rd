@@ -17,7 +17,7 @@ A data frame with the following columns:
 Rosenberger, K.J., Duan, R., Chen, Y. et al. (2021):
 Predictive P-score for treatment ranking in Bayesian network meta-analysis.
 \emph{BMC Med Res Methodol} \bold{21}, 213.
-\url{https://doi.org/10.1186/s12874-021-01397-5}
+\doi{10.1186/s12874-021-01397-5}
 }
 \description{
 Data from a network meta-analysis on immune checkpoint inhibitors (ICIs)

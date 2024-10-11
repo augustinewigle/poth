@@ -1,7 +1,7 @@
 #' Calculate precision of treatment hierarchy (POTH) metric
 #'
 #' @description
-#' precision of treatment hierarchy (POTH) is a metric to quantify the uncertainty in
+#' Precision of treatment hierarchy (POTH) is a metric to quantify the uncertainty in
 #' a treatment hierarchy in network meta-analysis
 #'
 #' @param x Mandatory argument with suitable information on the treatment
@@ -66,8 +66,9 @@
 #'   Guido Schwarzer \email{guido.schwarzer@@uniklinik-freiburg.de}
 #'
 #' @references
-#' Wigle A, ... (2024):
-#' Separation In Ranking: A Metric for Quantifying Uncertainty in Treatment
+#' Wigle, A., Béliveau, A., Salanti, G., Rücker, G., Schwarzer, G., Mavridis, D.,
+#' Nikolakopoulou, A. (2024):
+#' Precision of Treatment Hierarchy: A Metric for Quantifying Uncertainty in Treatment
 #' Hierarchies in Network Meta-Analysis
 #'
 #' @examples
@@ -136,8 +137,8 @@ poth <- function(x, se = NULL, small.values, pooled, trts = NULL) {
   }
   else
     pooled <- ""
-  
-  
+
+
   #
   # Calculate POTH
   #
@@ -310,9 +311,9 @@ poth <- function(x, se = NULL, small.values, pooled, trts = NULL) {
 #' @export
 
 print.poth <- function(x, sort = TRUE, digits = 3, ...) {
-  
+
   chkclass(x, "poth")
-  
+
   class(x) <- "list"
   #
   if (sort)
@@ -322,7 +323,7 @@ print.poth <- function(x, sort = TRUE, digits = 3, ...) {
   #
   x$poth <- round(x$poth, digits)
   x$ranking <- round(x$ranking[seq], digits)
-  
+
   txt <- "Precision of treatment hierarchy (POTH)"
   #
   if (x$pooled != "")
@@ -339,7 +340,7 @@ print.poth <- function(x, sort = TRUE, digits = 3, ...) {
   #
   cat("Ranking:\n")
   print(x$ranking)
-  
+
   invisible(NULL)
 }
 
@@ -362,9 +363,9 @@ summary.poth <- function(object, ...) {
 #' @export
 
 print.summary.poth <- function(x, sort = TRUE, digits = 3, ...) {
-  
+
   chkclass(x, "summary.poth")
-    
+
   if (sort)
     seq <- rev(order(x$ranking))
   else
@@ -375,7 +376,7 @@ print.summary.poth <- function(x, sort = TRUE, digits = 3, ...) {
   #
   if (!is.null(x$ranking.matrix))
     x$ranking.matrix <- round(x$ranking.matrix[seq, ], digits)
-  
+
   txt <- "Precision of treatment hierarchy (POTH)"
   #
   if (x$pooled != "")
@@ -397,6 +398,6 @@ print.summary.poth <- function(x, sort = TRUE, digits = 3, ...) {
     cat("Ranking matrix:\n")
     print(x$ranking.matrix)
   }
-  
+
   invisible(NULL)
 }

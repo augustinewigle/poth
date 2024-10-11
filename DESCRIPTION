@@ -1,21 +1,21 @@
 Package: poth
-Title: Precision Of Treatment Hierarchy (POTH)
+Title: Precision of Treatment Hierarchy (POTH)
 Version: 0.2-0
-Date: 2024-09-06
+Date: 2024-10-11
 Depends: R (>= 3.5.0)
 Imports: ggplot2, stringr, netmeta
 Authors@R: c(person("Augustine", "Wigle",
-                    role =  c("aut", "cre"),
+                    role =  c("aut", "cre", "cph"),
                     email = "amhwigle@uwaterloo.ca",
                     comment = c(ORCID = "0000-0003-0225-1949")),
              person("Guido", "Schwarzer",
                     role = "aut",
                     email = "guido.schwarzer@uniklinik-freiburg.de",
                     comment = c(ORCID = "0000-0001-6214-9087")))
-Author: Augustine Wigle [cre, aut] (<https://orcid.org/0000-0003-0225-1949>),
-  Guido Schwarzer [aut] (<https://orcid.org/0000-0001-6214-9087>)
+Author: Augustine Wigle [aut, cre, cph] (<https://orcid.org/0000-0003-0225-1949>),
+        Guido Schwarzer [aut] (<https://orcid.org/0000-0001-6214-9087>)
 Maintainer: Augustine Wigle <amhwigle@uwaterloo.ca>
-Description: Calculate POTH and leave-one-out POTH for frequentist network meta-analysis.
+Description: Calculate POTH for treatment hierarchies from frequentist and Bayesian network meta-analysis. POTH quantifies the certainty in a treatment hierarchy. Subset POTH, POTH residuals, and cumulative POTH can also be calculated to improve interpretation of treatment hierarchies.
 URL: https://github.com/augustinewigle/poth
 BugReports: https://github.com/augustinewigle/poth/issues
 License: GPL (>= 2)

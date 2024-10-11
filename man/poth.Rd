@@ -53,7 +53,7 @@ function. The object is a list containing the following components:
 \item{pooled}{As defined above.}
 }
 \description{
-precision of treatment hierarchy (POTH) is a metric to quantify the uncertainty in
+Precision of treatment hierarchy (POTH) is a metric to quantify the uncertainty in
 a treatment hierarchy in network meta-analysis
 }
 \details{
@@ -125,8 +125,9 @@ poth(nr2)
 
 }
 \references{
-Wigle A, ... (2024):
-Separation In Ranking: A Metric for Quantifying Uncertainty in Treatment
+Wigle, A., Béliveau, A., Salanti, G., Rücker, G., Schwarzer, G., Mavridis, D.,
+Nikolakopoulou, A. (2024):
+Precision of Treatment Hierarchy: A Metric for Quantifying Uncertainty in Treatment
 Hierarchies in Network Meta-Analysis
 }
 \author{

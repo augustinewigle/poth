@@ -8,16 +8,15 @@
 #'   harmful (\code{"undesirable"}) effect, can be abbreviated.
 #'
 #' @return named vector of P-scores
-#'
-#' @export
+
 
 pscores <- function(TE, seTE, small.values = "desirable", trts = NULL) {
-  
+
   small.values <- setsv(small.values)
-  
+
   n <- nrow(TE)
   n.seq <- seq_len(n)
-  
+
   # name check
   if (length(trts) != n) {
     if (is.null(colnames(TE))) {
@@ -29,7 +28,7 @@ pscores <- function(TE, seTE, small.values = "desirable", trts = NULL) {
   }
   else
     colnames(TE) <- trts
-  
+
   a_mat <- matrix(NA, nrow = n, ncol = n)
   #
   for (i in n.seq)
@@ -37,7 +36,7 @@ pscores <- function(TE, seTE, small.values = "desirable", trts = NULL) {
       if (i != j)
         a_mat[i, j] <- TE[i, j] / seTE[i, j]
 
-  
+
   # Calculate p-scores
   pscores <- numeric(n)
   direction <- ifelse(small.values == "undesirable", 1, -1)

@@ -21,8 +21,9 @@
 #'   Guido Schwarzer \email{guido.schwarzer@@uniklinik-freiburg.de}
 #'
 #' @references
-#' Wigle A, ... (2024):
-#' Separation In Ranking: A Metric for Quantifying Uncertainty in Treatment
+#' Wigle, A., Béliveau, A., Salanti, G., Rücker, G., Schwarzer, G., Mavridis, D.,
+#' Nikolakopoulou, A. (2024):
+#' Precision of Treatment Hierarchy: A Metric for Quantifying Uncertainty in Treatment
 #' Hierarchies in Network Meta-Analysis
 #'
 #' @examples
@@ -53,9 +54,9 @@
 #' @export
 
 plot.loo.poth <- function(x, labels = TRUE, digits = 3, ...) {
-  
+
   chkclass(x, "loo.poth")
-  
+
   res_pos <- x$resid > 0
   poth <- attr(x, "poth")
   score_type <- attr(x, "score_type")

@@ -50,8 +50,9 @@ plot(c2, labels = TRUE)
 
 }
 \references{
-Wigle A, ... (2024):
-Separation In Ranking: A Metric for Quantifying Uncertainty in Treatment
+Wigle, A., Béliveau, A., Salanti, G., Rücker, G., Schwarzer, G., Mavridis, D.,
+Nikolakopoulou, A. (2024):
+Precision of Treatment Hierarchy: A Metric for Quantifying Uncertainty in Treatment
 Hierarchies in Network Meta-Analysis
 }
 \author{
