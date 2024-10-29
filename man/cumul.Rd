@@ -38,7 +38,7 @@ A data frame with additional class \code{cumul.poth} and the
 Cumulative method for precision of treatment hierarchy (POTH) metric
 }
 \examples{
-\dontrun{
+\donttest{
 library("netmeta")
 data(Senn2013)
 net1 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
@@ -49,7 +49,6 @@ c1 <- cumul(poth(net1))
 c1
 plot(c1)
 plot(c1, labels = TRUE)
-
 c2 <- cumul(poth(net1), sort = FALSE)
 c2
 plot(c2)

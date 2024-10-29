@@ -28,7 +28,6 @@ Plot results of leave-one-out method for precision of treatment hierarchy (POTH)
 (Wigle et al., 2024).
 }
 \examples{
-\dontrun{
 library("netmeta")
 data(smokingcessation)
 p1 <- pairwise(list(treat1, treat2, treat3),
@@ -41,6 +40,7 @@ loo1 <- loo(poth(net1))
 loo1
 plot(loo1)
 
+\donttest{
 data(Senn2013)
 net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
                 data = Senn2013, sm = "MD", random = FALSE)
@@ -50,7 +50,6 @@ loo2 <- loo(poth(net2), sort = FALSE)
 loo2
 plot(loo2)
 }
-
 }
 \references{
 Wigle, A., Béliveau, A., Salanti, G., Rücker, G., Schwarzer, G., Mavridis, D.,

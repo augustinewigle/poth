@@ -87,7 +87,7 @@ Argument \code{trts} is ignored for \code{\link[netmeta]{netmeta}},
 \code{\link[netmeta]{netrank}}, and \code{\link[netmeta]{rankogram}} objects.
 }
 \examples{
-\dontrun{
+\donttest{
 library("netmeta")
 data(smokingcessation)
 p1 <- pairwise(list(treat1, treat2, treat3),
@@ -122,7 +122,6 @@ nr2 <- netrank(net2)
 nr2
 poth(nr2)
 }
-
 }
 \references{
 Wigle, A., Béliveau, A., Salanti, G., Rücker, G., Schwarzer, G., Mavridis, D.,

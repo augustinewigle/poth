@@ -33,7 +33,6 @@ safer treatment.
 data(Xu2018)
 head(Xu2018)
 
-\dontrun{
 library("netmeta")
 pw <- pairwise(treat = treatment, event = adverse, n = n,
   studlab = studyID, data = Xu2018, sm = "OR")
@@ -42,7 +41,6 @@ net <- netmeta(pw, small.values = "desirable", method.tau = "REML",
   common = FALSE)
 #
 poth(net)
-}
 }
 \seealso{
 \code{\link[netmeta]{netmeta}}

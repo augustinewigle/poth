@@ -27,7 +27,6 @@
 #' Hierarchies in Network Meta-Analysis
 #'
 #' @examples
-#' \dontrun{
 #' library("netmeta")
 #' data(smokingcessation)
 #' p1 <- pairwise(list(treat1, treat2, treat3),
@@ -40,6 +39,7 @@
 #' loo1
 #' plot(loo1)
 #'
+#' \donttest{
 #' data(Senn2013)
 #' net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
 #'                 data = Senn2013, sm = "MD", random = FALSE)
@@ -49,7 +49,6 @@
 #' loo2
 #' plot(loo2)
 #' }
-#'
 #' @method plot loo.poth
 #' @export
 

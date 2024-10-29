@@ -17,7 +17,6 @@
 #' \item{ratio}{Ratio of residual devided by absolute sum of residuals.}
 #'
 #' @examples
-#' \dontrun{
 #' library("netmeta")
 #' data(smokingcessation)
 #' p1 <- pairwise(list(treat1, treat2, treat3),
@@ -28,12 +27,6 @@
 #' # Leave-one-out method
 #' loo1 <- loo(poth(net1))
 #' loo1
-#'
-#' data(Senn2013)
-#' net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
-#'                 data = Senn2013, sm = "MD", random = FALSE)
-#'
-#' }
 #'
 #' @rdname loo
 #' @method loo poth
@@ -144,7 +137,7 @@ print.loo.poth <- function(x, digits = 3, legend = TRUE, ...) {
   poth <- attr(x, "poth")
   score_type <- attr(x, "score_type")
   pooled <- attr(x, "pooled")
-  
+
   txt <- "Leave-one-out method"
   #
   if (pooled != "")
@@ -159,7 +152,7 @@ print.loo.poth <- function(x, digits = 3, legend = TRUE, ...) {
   #
   cat(paste0("Precision of treatment hierarchy (global POTH) = ",
              round(poth, digits = digits), "\n\n"))
-  
+
   rownames(x) <- x$trt
   x$trt <- NULL
   #
@@ -171,7 +164,7 @@ print.loo.poth <- function(x, digits = 3, legend = TRUE, ...) {
   class(x) <- "data.frame"
   #
   print(x)
-  
+
   if (legend) {
     cat("\nLegend:\n")
     cat(" rank     - Treatment rank (global)\n")
@@ -180,6 +173,6 @@ print.loo.poth <- function(x, digits = 3, legend = TRUE, ...) {
     cat(" resid    - Residual (global POTH minus leave-one-out POTH)\n")
     cat(" ratio    - Ratio of residual devided by absolute sum of residuals\n")
   }
-  
+
   invisible(NULL)
 }

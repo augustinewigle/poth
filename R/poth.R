@@ -72,7 +72,7 @@
 #' Hierarchies in Network Meta-Analysis
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library("netmeta")
 #' data(smokingcessation)
 #' p1 <- pairwise(list(treat1, treat2, treat3),
@@ -107,7 +107,6 @@
 #' nr2
 #' poth(nr2)
 #' }
-#'
 #' @export poth
 
 poth <- function(x, se = NULL, small.values, pooled, trts = NULL) {

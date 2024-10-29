@@ -27,7 +27,6 @@ An R object of class \code{poth}.
 Calculate the local POTH for a subset of treatments
 }
 \examples{
-\dontrun{
 library("netmeta")
 data(smokingcessation)
 p1 <- pairwise(list(treat1, treat2, treat3),
@@ -43,6 +42,5 @@ subset(poth(net1), top = 3)
 
 # Use P-scores to calculate local POTH for first three treatments
 subset(poth(net1), bottom = 3)
-}
 
 }

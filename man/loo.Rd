@@ -37,7 +37,6 @@ A data frame with additional class \code{loo.poth} and the following
 Leave-one-out method for precision of treatment hierarchy (POTH) metric
 }
 \examples{
-\dontrun{
 library("netmeta")
 data(smokingcessation)
 p1 <- pairwise(list(treat1, treat2, treat3),
@@ -48,12 +47,6 @@ net1 <- netmeta(p1, random = FALSE)
 # Leave-one-out method
 loo1 <- loo(poth(net1))
 loo1
-
-data(Senn2013)
-net2 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
-                data = Senn2013, sm = "MD", random = FALSE)
-
-}
 
 }
 \keyword{print}

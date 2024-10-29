@@ -17,7 +17,7 @@
 #' \item{poth_cum}{Cumulative POTH.}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library("netmeta")
 #' data(Senn2013)
 #' net1 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
@@ -28,7 +28,6 @@
 #' c1
 #' plot(c1)
 #' plot(c1, labels = TRUE)
-#' 
 #' c2 <- cumul(poth(net1), sort = FALSE)
 #' c2
 #' plot(c2)
@@ -42,10 +41,10 @@
 cumul.poth <- function(x, sort = TRUE, ...) {
 
   chkclass(x, "poth")
-  
+
   n <- x$n
   trts <- x$trts
-  
+
   if (x$input == "mcmc.samples") {
     score_type <- "SUCRA"
     ranking <- x$ranking
@@ -99,7 +98,7 @@ cumul.poth <- function(x, sort = TRUE, ...) {
   #
   ranking <- ranking[seq]
   trts <- trts[seq]
-  
+
   res <- data.frame(trt = trts,
                     rank = rank(-ranking),
                     score = ranking,
@@ -125,7 +124,7 @@ cumul.poth <- function(x, sort = TRUE, ...) {
 #' @export
 
 print.cumul.poth <- function(x, digits = 3, legend = TRUE, ...) {
-  
+
   chkclass(x, "cumul.poth")
   #
   chknumeric(digits, min = 0, length = 1)
@@ -134,7 +133,7 @@ print.cumul.poth <- function(x, digits = 3, legend = TRUE, ...) {
   poth <- attr(x, "poth")
   score_type <- attr(x, "score_type")
   pooled <- attr(x, "pooled")
-  
+
   txt <- "Cumulative precision of treatment hierarchy (POTH)"
   #
   if (pooled != "")
@@ -146,7 +145,7 @@ print.cumul.poth <- function(x, digits = 3, legend = TRUE, ...) {
   txt <- paste0(txt, "\n\n")
   #
   cat(txt)
-  
+
   x$trt <- NULL
   #
   x$score <- round(x$score, digits)
@@ -160,14 +159,14 @@ print.cumul.poth <- function(x, digits = 3, legend = TRUE, ...) {
   class(x) <- "data.frame"
   #
   print(x)
-  
+
   if (legend) {
     cat("\nLegend:\n")
     cat(" rank  - Treatment rank (global)\n")
     cat(" score - Ranking metric (global)\n")
     cat(" cPOTH - Cumulative POTH\n")
   }
-  
+
   invisible(NULL)
 }
 

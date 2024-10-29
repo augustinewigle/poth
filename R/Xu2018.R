@@ -37,7 +37,6 @@
 #' data(Xu2018)
 #' head(Xu2018)
 #'
-#' \dontrun{
 #' library("netmeta")
 #' pw <- pairwise(treat = treatment, event = adverse, n = n,
 #'   studlab = studyID, data = Xu2018, sm = "OR")
@@ -46,6 +45,5 @@
 #'   common = FALSE)
 #' #
 #' poth(net)
-#' }
 
 NULL

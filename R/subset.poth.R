@@ -8,35 +8,33 @@
 #' @param bottom A single integer to define the number of treatments with the
 #'   smallest ranking metric to consider in subset.
 #' @param \dots Additional arguments (ignored).
-#' 
+#'
 #' @return An R object of class \code{poth}.
 #'
 #' @examples
-#' \dontrun{
 #' library("netmeta")
 #' data(smokingcessation)
 #' p1 <- pairwise(list(treat1, treat2, treat3),
 #'   event = list(event1, event2, event3), n = list(n1, n2, n3),
 #'   data = smokingcessation, sm = "OR")
 #' net1 <- netmeta(p1, random = FALSE)
-#' 
+#'
 #' # Use P-scores to calculate local POTH for treatments "A" and "C"
 #' subset(poth(net1), subset = c("A", "C"))
-#' 
+#'
 #' # Use P-scores to calculate local POTH for first three treatments
 #' subset(poth(net1), top = 3)
-#' 
+#'
 #' # Use P-scores to calculate local POTH for first three treatments
 #' subset(poth(net1), bottom = 3)
-#' }
-#' 
+#'
 #' @method subset poth
 #' @export
 
 subset.poth <- function(x, subset, top, bottom, ...) {
-  
+
   chkclass(x, "poth")
-  
+
   if (x$input == "mcmc.samples") {
     score_type <- "SUCRA"
     #
@@ -69,7 +67,7 @@ subset.poth <- function(x, subset, top, bottom, ...) {
   else
     stop("Local POTH for a subset of treatments not available for input type '",
          x$input, "'.")
-  
+
   if (as.numeric(!missing(subset)) +
       as.numeric(!missing(top) | !missing(bottom)) != 1)
     stop("Please provide either argument 'subset' ",
@@ -99,7 +97,7 @@ subset.poth <- function(x, subset, top, bottom, ...) {
   #
   if (!missing(top) & !missing(bottom))
     seq <- seq.top | seq.bottom
-  
+
   if (x$input == "mcmc.samples") {
     if (x$pooled != "")
       return(poth(samples[, seq, drop = FALSE], small.values = small.values,
