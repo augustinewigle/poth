@@ -4,6 +4,7 @@ Version: 0.2-0
 Date: 2024-10-11
 Depends: R (>= 3.5.0)
 Imports: ggplot2, stringr, netmeta
+Suggests: mvtnorm
 Authors@R: c(person("Augustine", "Wigle",
                     role =  c("aut", "cre", "cph"),
                     email = "amhwigle@uwaterloo.ca",
