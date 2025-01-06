@@ -15,7 +15,7 @@ Official Git repository of R package **poth**
 
 ## Description
 
-The poth package allows to calculate POTH, subset POTH, POTH residuals, and cumulative POTH for frequentist and Bayesian
+The poth package allows to calculate POTH, subset POTH, POTH residuals, and best k treatments POTH for frequentist and Bayesian
 network meta-analysis.
 
 

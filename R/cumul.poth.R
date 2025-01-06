@@ -1,4 +1,4 @@
-#' Cumulative method for precision of treatment hierarchy (POTH) metric
+#' Best k treatments method for precision of treatment hierarchy (POTH) metric
 #'
 #' @param x An R object of class \code{poth}.
 #' @param sort A logical indicating whether results should be sorted
@@ -9,12 +9,12 @@
 #'   printed.
 #' @param \dots Additional arguments.
 #'
-#' @return A data frame with additional class \code{cumul.poth} and the
+#' @return A data frame with additional class \code{bestk.poth} and the
 #'   following variables:
 #' \item{trt}{Name of added treatment.}
 #' \item{rank}{Treatment rank (global).}
 #' \item{score}{Ranking metric (global).}
-#' \item{poth_cum}{Cumulative POTH.}
+#' \item{poth_bestk}{Best k treatments POTH.}
 #'
 #' @examples
 #' \donttest{
@@ -23,22 +23,22 @@
 #' net1 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
 #'   data = Senn2013, sm = "MD", random = FALSE)
 #'
-#' # Cumulative method
-#' c1 <- cumul(poth(net1))
+#' # Best k treatments method
+#' c1 <- bestk(poth(net1))
 #' c1
 #' plot(c1)
 #' plot(c1, labels = TRUE)
-#' c2 <- cumul(poth(net1), sort = FALSE)
+#' c2 <- bestk(poth(net1), sort = FALSE)
 #' c2
 #' plot(c2)
 #' plot(c2, labels = TRUE)
 #' }
 #'
-#' @rdname cumul
-#' @method cumul poth
+#' @rdname bestk
+#' @method bestk poth
 #' @export
 
-cumul.poth <- function(x, sort = TRUE, ...) {
+bestk.poth <- function(x, sort = TRUE, ...) {
 
   chkclass(x, "poth")
 
@@ -94,7 +94,7 @@ cumul.poth <- function(x, sort = TRUE, ...) {
     cum_poths <- c(NA, sapply(cum_pscores, function(x) poth(x)$poth))
   }
   else
-    stop("Cumulative method not available for input type '", x$input, "'.")
+    stop("Best k treatments method not available for input type '", x$input, "'.")
   #
   ranking <- ranking[seq]
   trts <- trts[seq]
@@ -102,7 +102,7 @@ cumul.poth <- function(x, sort = TRUE, ...) {
   res <- data.frame(trt = trts,
                     rank = rank(-ranking),
                     score = ranking,
-                    poth_cum = cum_poths)
+                    poth_bestk = cum_poths)
   rownames(res) <- trts
   #
   attr(res, "poth") <- x$poth
@@ -112,20 +112,20 @@ cumul.poth <- function(x, sort = TRUE, ...) {
   attr(res, "score_type") <- score_type
   attr(res, "small.values") <- small.values
   #
-  class(res) <- c("cumul.poth", class(res))
+  class(res) <- c("bestk.poth", class(res))
   #
   res
 }
 
 
-#' @rdname cumul
+#' @rdname bestk
 #' @keywords print
-#' @method print cumul.poth
+#' @method print bestk.poth
 #' @export
 
-print.cumul.poth <- function(x, digits = 3, legend = TRUE, ...) {
+print.bestk.poth <- function(x, digits = 3, legend = TRUE, ...) {
 
-  chkclass(x, "cumul.poth")
+  chkclass(x, "bestk.poth")
   #
   chknumeric(digits, min = 0, length = 1)
   chklogical(legend)
@@ -134,7 +134,7 @@ print.cumul.poth <- function(x, digits = 3, legend = TRUE, ...) {
   score_type <- attr(x, "score_type")
   pooled <- attr(x, "pooled")
 
-  txt <- "Cumulative precision of treatment hierarchy (POTH)"
+  txt <- "Best k treatments precision of treatment hierarchy (POTH)"
   #
   if (pooled != "")
     txt <- paste0(txt,
@@ -150,11 +150,11 @@ print.cumul.poth <- function(x, digits = 3, legend = TRUE, ...) {
   #
   x$score <- round(x$score, digits)
   #
-  x$poth_cum <- round(x$poth_cum, digits)
-  x$poth_cum <- ifelse(is.na(x$poth_cum), rep_len("", nrow(x)), x$poth_cum)
+  x$poth_bestk <- round(x$poth_bestk, digits)
+  x$poth_bestk <- ifelse(is.na(x$poth_bestk), rep_len("", nrow(x)), x$poth_bestk)
   #
   rownames(x) <- paste("Adding", rownames(x))
-  names(x)[names(x) == "poth_cum"] <- "cPOTH"
+  names(x)[names(x) == "poth_bestk"] <- "POTH"
   #
   class(x) <- "data.frame"
   #
@@ -164,15 +164,15 @@ print.cumul.poth <- function(x, digits = 3, legend = TRUE, ...) {
     cat("\nLegend:\n")
     cat(" rank  - Treatment rank (global)\n")
     cat(" score - Ranking metric (global)\n")
-    cat(" cPOTH - Cumulative POTH\n")
+    cat(" POTH - Best k Treatments POTH\n")
   }
 
   invisible(NULL)
 }
 
 
-#' @rdname cumul
-#' @export cumul
+#' @rdname bestk
+#' @export bestk
 
-cumul <- function(x, ...)
-  UseMethod("cumul")
+bestk <- function(x, ...)
+  UseMethod("bestk")
