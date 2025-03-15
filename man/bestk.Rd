@@ -4,7 +4,8 @@
 \alias{bestk.poth}
 \alias{print.bestk.poth}
 \alias{bestk}
-\title{Best k treatments method for precision of treatment hierarchy (POTH) metric}
+\title{Best k treatments method for precision of treatment hierarchy (POTH)
+metric}
 \usage{
 \method{bestk}{poth}(x, sort = TRUE, ...)
 
@@ -35,7 +36,8 @@ A data frame with additional class \code{bestk.poth} and the
 \item{poth_bestk}{Best k treatments POTH.}
 }
 \description{
-Best k treatments method for precision of treatment hierarchy (POTH) metric
+Best k treatments method for precision of treatment hierarchy (POTH)
+metric
 }
 \examples{
 \donttest{
@@ -45,14 +47,14 @@ net1 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
   data = Senn2013, sm = "MD", random = FALSE)
 
 # Best k treatments method
-c1 <- bestk(poth(net1))
-c1
-plot(c1)
-plot(c1, labels = TRUE)
-c2 <- bestk(poth(net1), sort = FALSE)
-c2
-plot(c2)
-plot(c2, labels = TRUE)
+bk1 <- bestk(poth(net1))
+bk1
+plot(bk1)
+plot(bk1, labels = TRUE)
+bk2 <- bestk(poth(net1), sort = FALSE)
+bk2
+plot(bk2)
+plot(bk2, labels = TRUE)
 }
 
 }

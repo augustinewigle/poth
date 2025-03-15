@@ -1,4 +1,5 @@
-#' Best k treatments method for precision of treatment hierarchy (POTH) metric
+#' Best k treatments method for precision of treatment hierarchy (POTH)
+#' metric
 #'
 #' @param x An R object of class \code{poth}.
 #' @param sort A logical indicating whether results should be sorted
@@ -24,14 +25,14 @@
 #'   data = Senn2013, sm = "MD", random = FALSE)
 #'
 #' # Best k treatments method
-#' c1 <- bestk(poth(net1))
-#' c1
-#' plot(c1)
-#' plot(c1, labels = TRUE)
-#' c2 <- bestk(poth(net1), sort = FALSE)
-#' c2
-#' plot(c2)
-#' plot(c2, labels = TRUE)
+#' bk1 <- bestk(poth(net1))
+#' bk1
+#' plot(bk1)
+#' plot(bk1, labels = TRUE)
+#' bk2 <- bestk(poth(net1), sort = FALSE)
+#' bk2
+#' plot(bk2)
+#' plot(bk2, labels = TRUE)
 #' }
 #'
 #' @rdname bestk

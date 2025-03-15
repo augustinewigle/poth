@@ -57,9 +57,9 @@ Precision of treatment hierarchy (POTH) is a metric to quantify the uncertainty 
 a treatment hierarchy in network meta-analysis
 }
 \details{
-This function calculates the precision of treatment hierarchy (POTH) metric to quantify
-the uncertainty in a treatment hierarchy in network meta-analysis
-(Wigle et al., 2024).
+This function calculates the precision of treatment hierarchy (POTH) metric
+to quantify the uncertainty in a treatment hierarchy in network
+meta-analysis (Wigle et al., 2024).
 
 Argument \code{x} providing information on the treatment hierarchy is the
 only mandatory argument. The following input formats can be provided:
@@ -82,6 +82,11 @@ MCMC samples, relative effects, or is an object created with
 \code{\link[netmeta]{netmeta}}. This argument can be provided for an R
 object created with \code{\link[netmeta]{netrank}} or
 \code{\link[netmeta]{rankogram}} and is ignored otherwise.
+
+For a \code{\link[netmeta]{netmeta}}, \code{\link[netmeta]{netrank}}, or
+\code{\link[netmeta]{rankogram}} object, argument \code{pooled} is by
+default equal to "random" if only the random effects model was considered in
+the analysis.
 
 Argument \code{trts} is ignored for \code{\link[netmeta]{netmeta}},
 \code{\link[netmeta]{netrank}}, and \code{\link[netmeta]{rankogram}} objects.
@@ -124,10 +129,11 @@ poth(nr2)
 }
 }
 \references{
-Wigle, A., Béliveau, A., Salanti, G., Rücker, G., Schwarzer, G., Mavridis, D.,
-Nikolakopoulou, A. (2024):
-Precision of Treatment Hierarchy: A Metric for Quantifying Uncertainty in Treatment
-Hierarchies in Network Meta-Analysis
+Wigle A, Béliveau A, Salanti G, Rücker G, Schwarzer G, Mavridis D,
+Nikolakopoulou A (2024):
+Precision of treatment hierarchy: A metric for quantifying uncertainty in
+treatment hierarchies in network meta-analysis.
+Preprint on arXiv, \url{https://doi.org/10.48550/arXiv.2501.11596}
 }
 \author{
 Augustine Wigle \email{amhwigle@uwaterloo.ca},

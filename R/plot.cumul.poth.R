@@ -22,10 +22,11 @@
 #'   Guido Schwarzer \email{guido.schwarzer@@uniklinik-freiburg.de}
 #'
 #' @references
-#' Wigle, A., Béliveau, A., Salanti, G., Rücker, G., Schwarzer, G., Mavridis, D.,
-#' Nikolakopoulou, A. (2024):
-#' Precision of Treatment Hierarchy: A Metric for Quantifying Uncertainty in Treatment
-#' Hierarchies in Network Meta-Analysis
+#' Wigle A, Béliveau A, Salanti G, Rücker G, Schwarzer G, Mavridis D,
+#' Nikolakopoulou A (2024):
+#' Precision of treatment hierarchy: A metric for quantifying uncertainty in
+#' treatment hierarchies in network meta-analysis.
+#' Preprint on arXiv, \url{https://doi.org/10.48550/arXiv.2501.11596}
 #'
 #' @examples
 #' \donttest{
@@ -35,19 +36,21 @@
 #'   data = Senn2013, sm = "MD", random = FALSE)
 #'
 #' # Best k treatments method
-#' c1 <- bestk(poth(net1))
-#' c1
-#' plot(c1)
-#' plot(c1, labels = TRUE)
-#' c2 <- bestk(poth(net1), sort = FALSE)
-#' c2
-#' plot(c2)
-#' plot(c2, labels = TRUE)
+#' bk1 <- bestk(poth(net1))
+#' bk1
+#' plot(bk1)
+#' plot(bk1, labels = TRUE)
+#' bk2 <- bestk(poth(net1), sort = FALSE)
+#' bk2
+#' plot(bk2)
+#' plot(bk2, labels = TRUE)
 #' }
+#' 
 #' @method plot bestk.poth
 #' @export
 
-plot.bestk.poth <- function(x, labels = FALSE, nchar.trts = 4, digits = 3, ...) {
+plot.bestk.poth <- function(x,
+                            labels = FALSE, nchar.trts = 4, digits = 3, ...) {
 
   chkclass(x, "bestk.poth")
   chknumeric(nchar.trts, min = 1, length = 1)

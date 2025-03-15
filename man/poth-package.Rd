@@ -5,9 +5,9 @@
 \alias{poth-package}
 \title{poth: Brief overview of methods and general hints}
 \description{
-R package \bold{poth} allows to calculate the precision of treatment hierarchy (POTH)
-metric to quantify the uncertainty in a treatment hierarchy in network
-meta-analysis (Wigle et al., 2024).
+R package \bold{poth} allows to calculate the precision of treatment
+hierarchy (POTH) metric to quantify the uncertainty in a treatment hierarchy
+in network meta-analysis (Wigle et al., 2024).
 }
 \details{
 R package \bold{poth} provides the following methods:
@@ -26,10 +26,11 @@ The development version of \bold{poth} is available on GitHub
 \url{https://github.com/augustinewigle/poth}.
 }
 \references{
-Wigle, A., Béliveau, A., Salanti, G., Rücker, G., Schwarzer, G., Mavridis, D.,
-Nikolakopoulou, A. (2024):
-Precision of Treatment Hierarchy: A Metric for Quantifying Uncertainty in Treatment
-Hierarchies in Network Meta-Analysis
+Wigle A, Béliveau A, Salanti G, Rücker G, Schwarzer G, Mavridis D,
+Nikolakopoulou A (2024):
+Precision of treatment hierarchy: A metric for quantifying uncertainty in
+treatment hierarchies in network meta-analysis.
+Preprint on arXiv, \url{https://doi.org/10.48550/arXiv.2501.11596}
 }
 \seealso{
 Useful links:

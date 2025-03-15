@@ -2,20 +2,68 @@
 % Please edit documentation in R/refdist.R
 \name{refdist}
 \alias{refdist}
-\title{Generate reference distribution for given network structure (with no multi-arm trials)}
+\title{Generate reference distribution for POTH for a given network structure
+(without multi-arm trials)}
 \usage{
-refdist(net, d, nsim)
+refdist(x, d, pooled, nsim = 25, verbose = TRUE)
 }
 \arguments{
-\item{net}{A netmeta object which has the desired structure including tau2}
+\item{x}{A \code{\link[netmeta]{netmeta}} object.}
 
-\item{d}{a vector of the desired relative effects, must be in the same order as the treatment ordering in net$X.matrix}
+\item{d}{A vector of the desired relative effects, must be in the same
+order as \code{x$trts}.}
 
-\item{nsim}{number of times to simulate from reference distribution}
+\item{pooled}{A character string indicating whether the treatment hierarchy
+is based on a common or random effects model. Either \code{"common"} or
+\code{"random"}, can be abbreviated.}
+
+\item{nsim}{Number of samples from reference distribution.}
+
+\item{verbose}{A logical indicating whether progress information should
+be printed.}
 }
 \value{
-A vector of the POTH values
+A vector of POTH values.
 }
 \description{
-Generate reference distribution for given network structure (with no multi-arm trials)
+Generate reference distribution for POTH for a given network structure
+(without multi-arm trials)
+}
+\details{
+By default, argument \code{pooled} is equal to "random" if only the random
+effects model was considered in the network meta-analysis \code{x}.
+Otherwise, argument \code{pooled} is equal to "common".
+
+If argument \code{d} is missing, the respective relative effects are taken
+from the network meta-analysis, i.e., \code{x$TE.common[, 1]} if
+\code{pooled = "common"} and \code{x$TE.random[, 1]} if
+\code{pooled = "random"}.
+}
+\examples{
+\donttest{
+library("netmeta")
+data(Senn2013)
+net1 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
+  data = Senn2013, subset = studlab != "Willms1999",
+  sm = "MD")
+
+# POTH (based on common effects model)
+poth(net1)
+
+# Sample POTH values from reference distribution (common effects model)
+set.seed(1909)
+poths <- refdist(net1)
+summary(poths)
+
+# POTH (based on random effects model)
+poth(net1, pooled = "random")
+
+# Sample POTH values from reference distribution (common effect model)
+poths.r <- refdist(net1, pooled = "random")
+summary(poths.r)
+}
+
+}
+\seealso{
+\code{\link[netmeta]{netmeta}}
 }
