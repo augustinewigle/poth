@@ -1,6 +1,6 @@
 #' Generate reference distribution for POTH for a given network structure
 #' (without multi-arm trials)
-#' 
+#'
 #' @param x A \code{\link[netmeta]{netmeta}} object.
 #' @param d A vector of the desired relative effects, must be in the same
 #'   order as \code{x$trts}.
@@ -9,22 +9,20 @@
 #'   \code{"random"}, can be abbreviated.
 #' @param nsim Number of samples from reference distribution.
 #' @param verbose A logical indicating whether progress information should
-#'   be printed. 
-#' 
+#'   be printed.
+#'
 #' @details
 #' By default, argument \code{pooled} is equal to "random" if only the random
 #' effects model was considered in the network meta-analysis \code{x}.
 #' Otherwise, argument \code{pooled} is equal to "common".
-#' 
+#'
 #' If argument \code{d} is missing, the respective relative effects are taken
-#' from the network meta-analysis, i.e., \code{x$TE.common[, 1]} if
-#' \code{pooled = "common"} and \code{x$TE.random[, 1]} if
-#' \code{pooled = "random"}.
-#' 
+#' to be all 0.
+#'
 #' @return A vector of POTH values.
 #'
 #' @seealso \code{\link[netmeta]{netmeta}}
-#' 
+#'
 #' @examples
 #' \donttest{
 #' library("netmeta")
@@ -32,27 +30,27 @@
 #' net1 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
 #'   data = Senn2013, subset = studlab != "Willms1999",
 #'   sm = "MD")
-#' 
+#'
 #' # POTH (based on common effects model)
 #' poth(net1)
-#' 
+#'
 #' # Sample POTH values from reference distribution (common effects model)
 #' set.seed(1909)
 #' poths <- refdist(net1)
 #' summary(poths)
-#' 
+#'
 #' # POTH (based on random effects model)
 #' poth(net1, pooled = "random")
-#' 
+#'
 #' # Sample POTH values from reference distribution (common effect model)
 #' poths.r <- refdist(net1, pooled = "random")
 #' summary(poths.r)
 #' }
-#' 
+#'
 #' @export
 
 refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
-  
+
   chkclass(x, "netmeta")
   #
   if (!missing(pooled)) {
@@ -67,10 +65,7 @@ refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
   }
   #
   if (missing(d)) {
-   if (pooled == "common")
-     d <- x$TE.common[, 1]
-   else
-     d <- x$TE.random[, 1]
+    d <- rep(0, x$n)
   }
   else
     chknumeric(d, length = length(x$trts))
@@ -81,7 +76,7 @@ refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
   if (any(x$multiarm))
     stop("Method not implemented for networks with multi-arms.",
          call. = FALSE)
-  
+
   # Simulate data with the desired relative effects and identical structure
   # and heterogeneity
   #
@@ -93,10 +88,10 @@ refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
     sdvec <- 1 / sqrt(x$w.random)
   else
     sdvec <- 1 / sqrt(x$w.common)
-  
+
   simdata <- replicate(nsim,
                        rnorm(length(meanvec), mean = meanvec, sd = sdvec))
-  
+
   # Calculate POTHs
   #
   poths <- numeric(nsim)
