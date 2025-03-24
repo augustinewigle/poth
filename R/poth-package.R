@@ -37,8 +37,9 @@
 #' @import ggplot2
 #' @importFrom stringr str_wrap str_trunc
 #' @importFrom stats pnorm rnorm
+#' @importFrom MASS ginv
 #' @importFrom netmeta netmeta treats
-#' @importFrom utils setTxtProgressBar txtProgressBar 
+#' @importFrom utils setTxtProgressBar txtProgressBar
 
 "_PACKAGE"
 

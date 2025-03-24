@@ -2,8 +2,7 @@
 % Please edit documentation in R/refdist.R
 \name{refdist}
 \alias{refdist}
-\title{Generate reference distribution for POTH for a given network structure
-(without multi-arm trials)}
+\title{Generate reference distribution for POTH for a given network structure}
 \usage{
 refdist(x, d, pooled, nsim = 25, verbose = TRUE)
 }
@@ -27,7 +26,6 @@ A vector of POTH values.
 }
 \description{
 Generate reference distribution for POTH for a given network structure
-(without multi-arm trials)
 }
 \details{
 By default, argument \code{pooled} is equal to "random" if only the random
@@ -35,16 +33,14 @@ effects model was considered in the network meta-analysis \code{x}.
 Otherwise, argument \code{pooled} is equal to "common".
 
 If argument \code{d} is missing, the respective relative effects are taken
-from the network meta-analysis, i.e., \code{x$TE.common[, 1]} if
-\code{pooled = "common"} and \code{x$TE.random[, 1]} if
-\code{pooled = "random"}.
+to be all 0.
 }
 \examples{
 \donttest{
 library("netmeta")
 data(Senn2013)
 net1 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
-  data = Senn2013, subset = studlab != "Willms1999",
+  data = Senn2013,
   sm = "MD")
 
 # POTH (based on common effects model)

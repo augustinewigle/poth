@@ -1,5 +1,4 @@
 #' Generate reference distribution for POTH for a given network structure
-#' (without multi-arm trials)
 #'
 #' @param x A \code{\link[netmeta]{netmeta}} object.
 #' @param d A vector of the desired relative effects, must be in the same
@@ -28,7 +27,7 @@
 #' library("netmeta")
 #' data(Senn2013)
 #' net1 <- netmeta(TE, seTE, treat1.long, treat2.long, studlab,
-#'   data = Senn2013, subset = studlab != "Willms1999",
+#'   data = Senn2013,
 #'   sm = "MD")
 #'
 #' # POTH (based on common effects model)
@@ -72,22 +71,18 @@ refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
   #
   chknumeric(nsim, min = 1, length = 1)
   chklogical(verbose)
-  #
-  if (any(x$multiarm))
-    stop("Method not implemented for networks with multi-arms.",
-         call. = FALSE)
 
   # Simulate data with the desired relative effects and identical structure
   # and heterogeneity
   #
   meanvec <- x$X.matrix %*% d
-  #
-  # Standard errors based on common or random effects model
+
+  # Standard errors based on common or random effects model, ignoring multi-arm corrections
   #
   if (pooled == "random")
-    sdvec <- 1 / sqrt(x$w.random)
+    sdvec <- sqrt(x$seTE^2 + x$tau2)
   else
-    sdvec <- 1 / sqrt(x$w.common)
+    sdvec <- x$seTE
 
   simdata <- replicate(nsim,
                        rnorm(length(meanvec), mean = meanvec, sd = sdvec))
@@ -99,6 +94,35 @@ refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
   pb <- txtProgressBar(min = 0, max = nsim, style = 3)
   #
   for (i in seq_len(nsim)) {
+
+    if(any(x$multiarm)) { # correct data to be consistent
+
+      mstudies <- x$studlab[x$multiarm]
+
+      # loop over studies
+      for(study in mstudies) {
+
+        ix <- which(x$studlab == study)
+        narm <- unique(x$n.arms[ix])
+        basicix  <- ix[1:(narm-1)] # indices for first ai-a contrasts for this study
+        funcix <- ix[narm:length(ix)] # indices for remaining contrasts to be made internally consistent
+
+        A <- t(x$X.matrix[basicix,])
+        if(narm == 3) {
+
+          B <- x$X.matrix[funcix,]
+
+        } else {
+
+          B <- t(x$X.matrix[funcix,])
+
+        }
+
+        simdata[funcix,i] <- matrix(simdata[basicix,i], nrow = 1) %*% MASS::ginv(A)%*%B
+
+      }
+
+    }
     poths[i] <-
       poth(netmeta(TE = simdata[, i],
                    seTE = x$seTE,
