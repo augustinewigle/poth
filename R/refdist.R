@@ -80,9 +80,9 @@ refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
   # Standard errors based on common or random effects model, ignoring multi-arm corrections
   #
   if (pooled == "random")
-    sdvec <- sqrt(x$seTE^2 + x$tau2)
+    sdvec <- x$seTE.adj.random
   else
-    sdvec <- x$seTE
+    sdvec <- x$seTE.adj.common
 
   simdata <- replicate(nsim,
                        rnorm(length(meanvec), mean = meanvec, sd = sdvec))
