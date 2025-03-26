@@ -137,5 +137,11 @@ refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
       setTxtProgressBar(pb, i)
   }
   #
-  poths
+  res <- list(dist = poths,
+              d = d,
+              pooled = pooled,
+              netmeta = x)
+  #
+  class(res) <- c("refdist.poth", class(res))
+  return(res)
 }
