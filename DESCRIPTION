@@ -3,7 +3,7 @@ Title: Precision of Treatment Hierarchy (POTH)
 Version: 0.3-0
 Date: 2025-03-15
 Depends: R (>= 3.5.0)
-Imports: ggplot2, stringr, netmeta
+Imports: ggplot2, stringr, netmeta, MASS
 Suggests: mvtnorm
 Authors@R: c(person("Augustine", "Wigle",
                     role =  c("aut", "cre", "cph"),
