@@ -2,9 +2,15 @@
 % Please edit documentation in R/refdist.R
 \name{refdist}
 \alias{refdist}
+\alias{print.refdist.poth}
+\alias{summary.refdist.poth}
 \title{Generate reference distribution for POTH for a given network structure}
 \usage{
 refdist(x, d, pooled, nsim = 25, verbose = TRUE)
+
+\method{print}{refdist.poth}(x, ...)
+
+\method{summary}{refdist.poth}(object, ...)
 }
 \arguments{
 \item{x}{A \code{\link[netmeta]{netmeta}} object.}
@@ -20,6 +26,10 @@ is based on a common or random effects model. Either \code{"common"} or
 
 \item{verbose}{A logical indicating whether progress information should
 be printed.}
+
+\item{\dots}{Additional arguments passed on to print or summary function.}
+
+\item{object}{A \code{refdist} object.}
 }
 \value{
 A vector of POTH values.

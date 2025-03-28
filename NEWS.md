@@ -3,7 +3,7 @@
 ### Major changes
 
 * New R function refdist() to generate reference distribution for POTH for a
-  given network structure (without multi-arm studies)
+  given network structure
 
 * Rename R function cumul() to kbest()
 

@@ -53,8 +53,9 @@
 plot.refdist.poth <- function(x, include.observed = TRUE, include.probability = FALSE, ...) {
 
   chkclass(x, "refdist.poth")
-
+  
   # Get rid of warning "no visible binding for global variable"
+  #
   dist <- obs <- name2 <- NULL
 
   dat <- data.frame(dist = x$dist)

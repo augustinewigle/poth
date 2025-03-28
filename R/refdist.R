@@ -9,6 +9,8 @@
 #' @param nsim Number of samples from reference distribution.
 #' @param verbose A logical indicating whether progress information should
 #'   be printed.
+#' @param object A \code{refdist} object.
+#' @param \dots Additional arguments passed on to print or summary function.
 #'
 #' @details
 #' By default, argument \code{pooled} is equal to "random" if only the random
@@ -49,7 +51,7 @@
 #' @export
 
 refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
-
+  
   chkclass(x, "netmeta")
   #
   if (!missing(pooled)) {
@@ -77,16 +79,17 @@ refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
   #
   meanvec <- x$X.matrix %*% d
 
-  # Standard errors based on common or random effects model, ignoring multi-arm corrections
+  # Standard errors based on common or random effects model with multi-arm
+  # corrections
   #
   if (pooled == "random")
     sdvec <- x$seTE.adj.random
   else
     sdvec <- x$seTE.adj.common
-
+  
   simdata <- replicate(nsim,
                        rnorm(length(meanvec), mean = meanvec, sd = sdvec))
-
+  
   # Calculate POTHs
   #
   poths <- numeric(nsim)
@@ -94,35 +97,31 @@ refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
   pb <- txtProgressBar(min = 0, max = nsim, style = 3)
   #
   for (i in seq_len(nsim)) {
-
-    if(any(x$multiarm)) { # correct data to be consistent
-
+    if (any(x$multiarm)) { # correct data to be consistent
       mstudies <- x$studlab[x$multiarm]
-
-      # loop over studies
+      #
+      # Loop over studies
+      #
       for(study in mstudies) {
-
         ix <- which(x$studlab == study)
         narm <- unique(x$n.arms[ix])
-        basicix  <- ix[1:(narm-1)] # indices for first ai-a contrasts for this study
-        funcix <- ix[narm:length(ix)] # indices for remaining contrasts to be made internally consistent
-
-        A <- t(x$X.matrix[basicix,])
-        if(narm == 3) {
-
-          B <- x$X.matrix[funcix,]
-
-        } else {
-
-          B <- t(x$X.matrix[funcix,])
-
-        }
-
-        simdata[funcix,i] <- matrix(simdata[basicix,i], nrow = 1) %*% MASS::ginv(A)%*%B
-
+        # Indices for first ai - a contrasts for this study
+        basicix  <- ix[1:(narm-1)]
+        # Indices for remaining contrasts to be made internally consistent
+        funcix <- ix[narm:length(ix)]
+        #
+        A <- t(x$X.matrix[basicix, ])
+        #
+        if (narm == 3)
+          B <- x$X.matrix[funcix, ]
+        else
+          B <- t(x$X.matrix[funcix, ])
+        #
+        simdata[funcix, i] <-
+          matrix(simdata[basicix, i], nrow = 1) %*% MASS::ginv(A) %*% B
       }
-
     }
+    #
     poths[i] <-
       poth(netmeta(TE = simdata[, i],
                    seTE = x$seTE,
@@ -143,5 +142,30 @@ refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
               netmeta = x)
   #
   class(res) <- c("refdist.poth", class(res))
-  return(res)
+  #
+  res
+}
+
+
+#' @rdname refdist
+#' @method print refdist.poth
+#' @export
+
+print.refdist.poth <- function(x, ...) {
+  chkclass(x, "refdist.poth")
+  #
+  print(x$dist, ...)
+  #
+  invisible(NULL)
+}
+
+
+#' @rdname refdist
+#' @method summary refdist.poth
+#' @export
+
+summary.refdist.poth <- function(object, ...) {
+  chkclass(object, "refdist.poth")
+  #
+  summary(object$dist, ...)
 }
