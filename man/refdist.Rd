@@ -2,15 +2,15 @@
 % Please edit documentation in R/refdist.R
 \name{refdist}
 \alias{refdist}
-\alias{print.refdist.poth}
-\alias{summary.refdist.poth}
+\alias{print.refdist}
+\alias{summary.refdist}
 \title{Generate reference distribution for POTH for a given network structure}
 \usage{
 refdist(x, d, pooled, nsim = 25, verbose = TRUE)
 
-\method{print}{refdist.poth}(x, ...)
+\method{print}{refdist}(x, ...)
 
-\method{summary}{refdist.poth}(object, ...)
+\method{summary}{refdist}(object, ...)
 }
 \arguments{
 \item{x}{A \code{\link[netmeta]{netmeta}} object.}

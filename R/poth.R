@@ -113,6 +113,7 @@
 #' nr2
 #' poth(nr2)
 #' }
+#' 
 #' @export poth
 
 poth <- function(x, se = NULL, small.values, pooled, trts = NULL) {
@@ -223,7 +224,7 @@ poth <- function(x, se = NULL, small.values, pooled, trts = NULL) {
   else if ((is.vector(x) & !is.list(x)) ||
            inherits(x, c("netrank", "rankogram"))) {
     #
-    # Input: ranking metrix or R object created with netrank() or rankogram()
+    # Input: ranking matrix or R object created with netrank() or rankogram()
     #
     if (inherits(x, "rankogram")) {
       n <- x$x$n

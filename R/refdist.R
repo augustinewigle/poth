@@ -65,20 +65,19 @@ refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
       pooled <- "common"
   }
   #
-  if (missing(d)) {
+  if (missing(d))
     d <- rep(0, x$n)
-  }
   else
     chknumeric(d, length = length(x$trts))
   #
   chknumeric(nsim, min = 1, length = 1)
   chklogical(verbose)
-
+  
   # Simulate data with the desired relative effects and identical structure
   # and heterogeneity
   #
   meanvec <- x$X.matrix %*% d
-
+  
   # Standard errors based on common or random effects model with multi-arm
   # corrections
   #
@@ -87,72 +86,73 @@ refdist <- function(x, d, pooled, nsim = 25, verbose = TRUE) {
   else
     sdvec <- x$seTE.adj.common
   
-  simdata <- replicate(nsim,
-                       rnorm(length(meanvec), mean = meanvec, sd = sdvec))
   
   # Calculate POTHs
   #
-  poths <- numeric(nsim)
+  poths <- vector("numeric", nsim)
   #
   pb <- txtProgressBar(min = 0, max = nsim, style = 3)
   #
   for (i in seq_len(nsim)) {
+    # Vector with treatment estimates
+    TE.i <- rnorm(length(meanvec), mean = meanvec, sd = sdvec)
+    #
     if (any(x$multiarm)) { # correct data to be consistent
-      mstudies <- x$studlab[x$multiarm]
       #
-      # Loop over studies
+      # Loop over multi-arm studies
       #
-      for(study in mstudies) {
-        ix <- which(x$studlab == study)
-        narm <- unique(x$n.arms[ix])
+      for (j in unique(x$studlab[x$multiarm])) {
+        sel.j <- which(x$studlab == j)
+        narm <- unique(x$n.arms[sel.j])
         # Indices for first ai - a contrasts for this study
-        basicix  <- ix[1:(narm-1)]
+        # (basic parameters)
+        basic.j  <- sel.j[1:(narm - 1)]
         # Indices for remaining contrasts to be made internally consistent
-        funcix <- ix[narm:length(ix)]
+        # (functional parameters)
+        funct.j <- sel.j[narm:length(sel.j)]
         #
-        A <- t(x$X.matrix[basicix, ])
+        A <- t(x$X.matrix[basic.j, ])
+        B <- t(x$X.matrix[funct.j, , drop = FALSE])
         #
-        if (narm == 3)
-          B <- x$X.matrix[funcix, ]
-        else
-          B <- t(x$X.matrix[funcix, ])
-        #
-        simdata[funcix, i] <-
-          matrix(simdata[basicix, i], nrow = 1) %*% MASS::ginv(A) %*% B
+        TE.i[funct.j] <- matrix(TE.i[basic.j], nrow = 1) %*% MASS::ginv(A) %*% B
       }
     }
     #
-    poths[i] <-
-      poth(netmeta(TE = simdata[, i],
-                   seTE = x$seTE,
-                   treat1 = x$treat1,
-                   treat2 = x$treat2,
-                   studlab = x$studlab,
-                   sm = x$sm,
-                   small.values = x$small.values,
-                   keepdata = FALSE), pooled = pooled)$poth
+    net.i <-  netmeta(TE = TE.i,
+                      seTE = x$seTE,
+                      treat1 = x$treat1,
+                      treat2 = x$treat2,
+                      studlab = x$studlab,
+                      sm = x$sm,
+                      small.values = x$small.values,
+                      keepdata = FALSE)
+    #
+    poths[i] <- poth(net.i, pooled = pooled)$poth
     #
     if (verbose)
       setTxtProgressBar(pb, i)
   }
+  #
+  if (verbose)
+    cat("\n")
   #
   res <- list(dist = poths,
               d = d,
               pooled = pooled,
               netmeta = x)
   #
-  class(res) <- c("refdist.poth", class(res))
+  class(res) <- c("refdist", class(res))
   #
   res
 }
 
 
 #' @rdname refdist
-#' @method print refdist.poth
+#' @method print refdist
 #' @export
 
-print.refdist.poth <- function(x, ...) {
-  chkclass(x, "refdist.poth")
+print.refdist <- function(x, ...) {
+  chkclass(x, "refdist")
   #
   print(x$dist, ...)
   #
@@ -161,11 +161,11 @@ print.refdist.poth <- function(x, ...) {
 
 
 #' @rdname refdist
-#' @method summary refdist.poth
+#' @method summary refdist
 #' @export
 
-summary.refdist.poth <- function(object, ...) {
-  chkclass(object, "refdist.poth")
+summary.refdist <- function(object, ...) {
+  chkclass(object, "refdist")
   #
   summary(object$dist, ...)
 }

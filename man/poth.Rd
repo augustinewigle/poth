@@ -127,6 +127,7 @@ nr2 <- netrank(net2)
 nr2
 poth(nr2)
 }
+
 }
 \references{
 Wigle A, Béliveau A, Salanti G, Rücker G, Schwarzer G, Mavridis D,

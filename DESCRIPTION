@@ -1,7 +1,7 @@
 Package: poth
 Title: Precision of Treatment Hierarchy (POTH)
 Version: 0.3-0
-Date: 2025-03-28
+Date: 2025-04-09
 Depends: R (>= 3.5.0)
 Imports: ggplot2, stringr, netmeta, MASS
 Suggests: mvtnorm
